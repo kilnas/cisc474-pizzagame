@@ -1,0 +1,73 @@
+
+
+CLASSES
+------------------------
+PizzaPlayer
+- updatePosition
+- move (jump, left, right)
+- xPos
+- yPos
+
+PizzaGame
+- lives
+- level
+- score
+- update
+- list of enemies
+- list of ingredients (mandatory)
+- list of topppings (optional to collect)
+- PizzaPlayer
+- Door
+- height
+- width
+
+Enemy (squirrels, birds)
+- speed
+- type
+- move
+- xPos
+- yPos
+
+Collectables
+-type (anchovies, pepperoni, cheeze*, sauce*)
+- xPos
+- yPos
+- isCollected (boolean)
+- isRequired (boolean)
+
+Door
+- isUnlocked (boolean)
+- xPos
+- yPos
+
+UI
+
+-start button
+-end button
+-pause button?
+
+drawUI
+-draw UI
+    - *drawlives
+    - *display score
+-draw game
+    - drawPlayer
+    - drawEnemies
+    - drawCollectibles
+    - drawDoor
+
+
+Public Methods
+- collision detection(x1 y1 x2 y2) --> true/false DONE
+- collision reaction (if pizzaPlayer collides w Thing, +/- score, - lives, complete level, etc..)
+- isOutOfBounds(x, y)
+- getRandomPos --> give a random unoccuppied position; could be on ground or platform
+- endGame
+- startGame
+- resetGame
+- pauseGame ?
+
+-gravity
+
+    
+

@@ -1,0 +1,46 @@
+
+#gameContainer{
+    background-color: papayawhip;
+    height: 500px;
+    width: 900px;
+}
+
+#gameUI{
+    background-color: aliceblue;
+    height: 20px;
+    width: 900px;
+}
+
+#gameBoard{
+    background-color: pink;
+    height: 500px;
+    width: 900px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+#pizzaPlayer{
+    border-radius: 50%;
+    width:60px;
+    height:60px;
+    background-color:#DFA060;
+    border-color:BurlyWood;
+    border-style:solid;
+    border-width:6px;
+    background-image: url("../images/emoji.png");
+    background-repeat: no-repeat;
+    background-size: 50px 50px;
+    background-position: center;
+    position: relative;
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    
+    /*top: 400px;*/
+    /*left: 20px;*/
+}
+
+/* abstract pizza classes*/
+.plainPizza{
+    
+}
