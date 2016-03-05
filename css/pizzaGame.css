@@ -17,6 +17,7 @@
     width: 900px;
     margin: 0 auto;
     overflow: hidden;
+    position: relative;
 }
 
 #pizzaPlayer{
@@ -31,13 +32,20 @@
     background-repeat: no-repeat;
     background-size: 50px 50px;
     background-position: center;
-    position: relative;
+    position: absolute;
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
-    
-    /*top: 400px;*/
-    /*left: 20px;*/
+    /*-webkit-transition: transform 0s linear;
+    transition: transform 0s linear;*/
+    /*-webkit-transition: all 0.3s ease-out , top 0.5s ease-in;*/
+    transition: all 0.3s ease-out, top .3s cubic-bezier(0,.99,.01,1);
+    top: -100px;
+    left: 20px;
+}
+
+.collectable{
+    position: absolute;
 }
 
 /* abstract pizza classes*/

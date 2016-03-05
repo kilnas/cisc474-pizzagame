@@ -28,14 +28,14 @@ Enemy (squirrels, birds)
 - xPos
 - yPos
 
-Collectables
+Collectables - Danielle 
 -type (anchovies, pepperoni, cheeze*, sauce*)
 - xPos
 - yPos
 - isCollected (boolean)
 - isRequired (boolean)
 
-Door
+Door - Daniele - DONE 
 - isUnlocked (boolean)
 - xPos
 - yPos
@@ -58,7 +58,7 @@ drawUI
 
 
 Public Methods
-- collision detection(x1 y1 x2 y2) --> true/false DONE
+- collision detection(x1 y1 x2 y2) --> true/false DONE (Danielle)
 - collision reaction (if pizzaPlayer collides w Thing, +/- score, - lives, complete level, etc..)
 - isOutOfBounds(x, y)
 - getRandomPos --> give a random unoccuppied position; could be on ground or platform
@@ -66,7 +66,6 @@ Public Methods
 - startGame
 - resetGame
 - pauseGame ?
-
 -gravity
 
     
