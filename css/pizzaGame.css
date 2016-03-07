@@ -11,6 +11,7 @@
     width: 900px;
 }
 
+
 #gameBoard{
     background-color: pink;
     height: 500px;
@@ -42,11 +43,84 @@
     transition: all 0.3s ease-out, top .3s cubic-bezier(0,.99,.01,1);
     top: -100px;
     left: 20px;
+    z-index: 1;
 }
 
-.collectable{
+
+
+.collectable, .Enemy, .platform{
     position: absolute;
 }
+
+/*Lives*/
+#pizzalife1 {
+	position: absolute;
+	left:40px;
+	display:inline-block;
+	padding:0px;
+	width: 100px; 
+	height: 100px;
+	border-radius: 50%;
+}
+#pizzalife2 {	
+    position: absolute;	
+    left:100px; 
+    display:inline-block;	
+    padding:0px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+#pizzalife3 {	
+    position: absolute;	
+    left:160px;
+    display:inline-block;
+    padding:0px;	
+    width: 100px; 
+    height: 100px;
+    border-radius: 50%;	
+}
+#slice {
+	overflow: hidden;
+	position: absolute;
+	top: 0; 
+	right: 0;
+	width: 50%; 
+	height: 50%;
+	transform-origin: 0% 100%;
+}
+#slice:first-child {
+	transform: rotate(-25deg) skewY(-40deg);
+
+}
+#slice-contents {
+	position: absolute;
+	left: -100%;
+	width: 200%; height: 200%;
+	border-radius: 50%;
+	background: url("../images/pizza-cut.png");
+	transition: background-color .5s;
+}
+#slice:first-child #slice-contents {
+	transform: skewY(40deg);
+
+}
+#slice-contents:hover {
+    background: red;
+}
+/*lives end*/
+
+#mouthDoor{
+    background-image: url("../images/mouthopen.jpg");
+    background-size: 100px 100px;
+    background-repeat: no-repeat;
+    height: 100px;
+    width: 100px;
+    left: 700px;
+    position: absolute;
+    background-color: salmon;
+}
+
 
 /* abstract pizza classes*/
 .plainPizza{

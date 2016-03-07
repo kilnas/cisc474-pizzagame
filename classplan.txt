@@ -2,7 +2,7 @@
 
 CLASSES
 ------------------------
-PizzaPlayer
+PizzaPlayer - kalina
 - updatePosition
 - move (jump, left, right)
 - xPos
@@ -16,10 +16,13 @@ PizzaGame
 - list of enemies
 - list of ingredients (mandatory)
 - list of topppings (optional to collect)
-- PizzaPlayer
+- PizzaPlayer - kalina
 - Door
 - height
 - width
+- isRunning/start - kalina
+- isPaused
+
 
 Enemy (squirrels, birds)
 - speed
@@ -35,7 +38,7 @@ Collectables - Danielle
 - isCollected (boolean)
 - isRequired (boolean)
 
-Door - Daniele - DONE 
+Door - Danielle - DONE 
 - isUnlocked (boolean)
 - xPos
 - yPos
@@ -51,10 +54,10 @@ drawUI
     - *drawlives
     - *display score
 -draw game
-    - drawPlayer
+    - drawPlayer -kalina
     - drawEnemies
     - drawCollectibles
-    - drawDoor
+    - drawDoor -kalina
 
 
 Public Methods
@@ -63,7 +66,7 @@ Public Methods
 - isOutOfBounds(x, y)
 - getRandomPos --> give a random unoccuppied position; could be on ground or platform
 - endGame
-- startGame
+- startGame -kalina
 - resetGame
 - pauseGame ?
 -gravity
