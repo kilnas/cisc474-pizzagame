@@ -60,6 +60,7 @@ var PizzaPlayer = function(xPos, yPos, width, height){ // main character player
     this.height = height;
     this.yVel = 0;
     this.isJumping = false;
+    this.isOnPlatform = false;
     this.toppings = [];
     this.currToppingsLength = 0; //counter to check for change
     this.isHittingDoor = false;
@@ -103,6 +104,18 @@ var Platform = function(xPos, yPos, width, height){
     this.height = height;
 }
 
+//return true if player is on the given platform
+var playerOnPlatform = function(player, platform){
+    var tol = 10; //height tolerance (within X pixels of platform height counts as on platform)
+
+    return(
+        player.yPos + player.height >= platform.yPos - tol //player is at platform height given tolerance
+        && player.yPos + player.height <= platform.yPos + tol 
+        && player.xPos < platform.xPos + platform.width//player left edge <= platform right edge
+        && player.xPos + player.width > platform.xPos//player right edge >= platform left edge
+        );
+        
+}
 
 //The door for completing the game. Unlocks after you collect the basic ingredients.
 var Door = function(xPos, yPos, width, height){
@@ -166,16 +179,19 @@ var collectItem = function(game, itemIndex, array){
     //else, you tried to collect topping when not allowed yet
     else{
         console.log("You can't collect toppings until you have the basic ingredients!");
-        alert("You can't collect toppings until you have the basic ingredients!");
     }
 };
 
-//return true if player is hitting anything in array
-var isHittingThingInArray = function(player, list){
+//return true if player is hitting anything in array besides the exception (current hit item)
+var isHittingThingInArray = function(player, list, current){
   var hit = false;
    for(var i=0; i < list.length && !hit; i++){
-       hit = hit && colliding(player, list[i]);
+       //if (!i == current){
+        hit = hit || colliding(player, list[i]);
+       //}
    }
+   console.log("is it hitting anything? " + hit);
+   return hit;
 }
 
 //check if player collided with any uncollected objects/enemies & react accordingly
@@ -184,7 +200,7 @@ var checkCollisions = function(game){
     //check ingredients
     for(var i=0; i < game.listOfIngredients.length; i++){
         if(colliding(game.pizzaPlayer, game.listOfIngredients[i]) 
-        && !game.listOfIngredients[i].isCollected && !game.pizzaPlayer.isHittingIngredient){
+        && !game.listOfIngredients[i].isCollected){
             //collect
             collectItem(game, i, game.listOfIngredients);
         }
@@ -197,9 +213,6 @@ var checkCollisions = function(game){
            //collect
             collectItem(game, i, game.listOfToppings);
         }
-        else if(!isHittingThingInArray(game.pizzaPlayer, game.listOfToppings[i])){
-            game.pizzaPlayer.isHittingTopping = false;
-    }
     }
     
     //check enemies
@@ -240,17 +253,16 @@ var Enemy = function(xPos, yPos, type, speed, width, height,minx,maxx){
         self.yPos=y;
     };
     
-      function updateEnemy(){
-          if (xPos<self.minx){
-              self.xPos+=1;
-              self.update();
+    this.updateEnemy = function(){
+          if (self.xPos<100){
+             self.xPos+=speed;
           }
-          else if(xPos>self.maxx){
-              self.xPos-=1;
-              self.update();
+          else if(self.xPos>100){
+              self.xPos-=speed;
           }
-      } 
+
     }
+}
    
 
 
@@ -285,11 +297,17 @@ var drawPizzaPlayer = function(pizzaPlayer){
     });
            
            
-    var drawTopping = function(t){
+    var drawTopping = function(){
         //apply abstract css class
     }
     //do stuff with height/width scaling
 }
+
+var drawScore = function(game){
+    var points = document.getElementById('points');
+    points.innerHTML = game.score.toString();
+}
+
 //draw enemy
 var drawEnemy = function(Enemy){
     var $Enemy = document.createElement('div');
@@ -310,7 +328,10 @@ var drawEnemies = function(game){
     
     for(var i=0; i<game.listOfEnemies.length; i++){
         drawEnemy(game.listOfEnemies[i]);
+       game.listOfEnemies[i].updateEnemy();
     }
+    
+   
 }
 //draw a single collectable item
 var drawCollectable = function(item){
@@ -407,19 +428,25 @@ var drawLives = function(game) {
         livesFlag = false;
     }
     if (game.lives == 2){
-        var lives = document.getElementById('lives');
-        var circle3 = document.getElementById('circle3');
-        lives.removeChild(circle3);
+        if ($('#circle3').length > 0) { //check if circle3 exists
+            var lives = document.getElementById('lives');
+            var circle3 = document.getElementById('circle3');
+            lives.removeChild(circle3);
+        }
     }
     if (game.lives == 1){
-        var lives = document.getElementById('lives');
-        var circle2 = document.getElementById('circle2');
-        lives.removeChild(circle2);
+        if ($('#circle2').length > 0) { //check if circle2 exists
+            var lives = document.getElementById('lives');
+            var circle2 = document.getElementById('circle2');
+            lives.removeChild(circle2);
+        }
     }
     if (game.lives == 0){
-        var lives = document.getElementById('lives');
-        var circle1 = document.getElementById('circle1');
-        lives.removeChild(circle1);
+        if ($('#circle1').length > 0) { //check if circle1 exists
+            var lives = document.getElementById('lives');
+            var circle1 = document.getElementById('circle1');
+            lives.removeChild(circle1);
+        }
     }
 }
 
@@ -443,6 +470,7 @@ var drawPlatform = function(platform){
     $item.style.top = platform.yPos+"px";
     $item.style.width = platform.width + "px",
     $item.style.height = platform.height + "px",
+    $item.style.backgroundColor = "black";
     
     $('#gameBoard').append($item);
 }
@@ -453,8 +481,20 @@ var drawPlatforms = function(game){
     
     //redraw
     for(var i=0; i < game.listOfPlatforms.length; i++){
-        drawCollectable(game.listOfPlatforms[i]);
+        drawPlatform(game.listOfPlatforms[i]);
     }
+}
+
+
+var drawGround = function(height){
+    //console.log("HERE" + $('#ground').css('height'));
+    $('#ground').css('opacity', 1);
+    $('#ground').css('top',  GROUNDLINE + height + 50 + 'px');
+    $('#ground').css('height', height + 'px');
+    //$('#ground').attr('top', GROUNDLINE + height + 'px');
+    
+    
+
 }
 
 //-------------------------------------- CONTROLLER stuff
@@ -511,6 +551,7 @@ var startGame = function(game, player){
   //testCollide();
     if(game.isRunning){
         drawDoor(testDoor);
+        drawGround(20);
         if(player.xPos >= GROUNDLINE){
             $("#pizzaPlayer").css({
                   "-webkit-transition": "all 0.3s ease-out",
@@ -546,7 +587,8 @@ console.log(testGame.isRunning);
 //testenemy
 var testEnemy = [
     
-   new Enemy(200,400,"Squirrel",1,20,20,-5,10)
+   new Enemy(200,400,"Squirrel",10,20,20,-5,10),
+   new Enemy(400,400,"Bird", 10, 20, 20, -10,10)
     ];
 
 var testIngredients = [
@@ -560,8 +602,10 @@ var testToppings = [
     new Collectable("pepperoni", 50, false, 600, 300, 20, 20)
 ];
 
+var testPlatform = new Platform(300, 400, 200, 20);
 var testPlatforms = [
-    new Platform(300, 300, 50, 50)
+    //new Platform(300, 400, 200, 20)
+    testPlatform
 ];
 
 testGame.listOfIngredients = testIngredients;
@@ -583,7 +627,7 @@ var testUpdate = function(){
         
         
          if (pizza1.isJumping) {
-            pizza1.yVel += GRAVITY;
+            pizza1.yVel += GRAVITY; 
             pizza1.yPos += pizza1.yVel;
             //console.log("YLOC: " + pizza1.yPos);
          if (pizza1.yPos > GROUNDLINE) {
@@ -591,7 +635,25 @@ var testUpdate = function(){
              pizza1.yVel = 0;
              pizza1.isJumping = false;
             }
-     }
+        }
+        
+        //NOTE: FIX LATER -- rn jumps onto platform from below instead of above
+        if(!pizza1.isOnPlatform && playerOnPlatform(pizza1, testPlatform)){ //if not on platform, check if landed on platform
+            console.log("im on da platfoooom!");
+            pizza1.yPos = testPlatform.yPos - pizza1.height;
+            pizza1.yVel = 0;
+            pizza1.isJumping = false;
+            pizza1.isOnPlatform = true;
+        }    
+        
+        if(pizza1.isOnPlatform){ //if on platform, check if moved off the platform
+           console.log("pizza at " + pizza1.xPos + ", platform at " + (testPlatform.xPos + testPlatform.width)); 
+           if(!playerOnPlatform(pizza1, testPlatform)){
+               pizza1.isOnPlatform = false;
+               //apply gravity?
+               pizza1.isJumping = true;
+           }
+        }
 
         testUpdate();
     }, 70);

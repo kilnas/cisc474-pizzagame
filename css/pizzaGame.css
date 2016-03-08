@@ -7,8 +7,25 @@
 
 #gameUI{
     background-color: aliceblue;
-    height: 20px;
+    height: 25px;
     width: 900px;
+}
+
+#startButton{
+    background: url("../images/pizza-button.png");
+}
+
+#startButton {
+    border: solid;
+    border-radius: 9px;
+    border-color: BurlyWood;
+    font-weight:bold;
+    color:#403030;
+}
+
+#score {
+    display:inline-block;
+    font-family:Impact, Charcoal, sans-serif
 }
 
 
@@ -46,38 +63,45 @@
     z-index: 1;
 }
 
-
+#ground{
+    position: absolute;
+    width: 1000px;
+    height: 20px;
+    top: 600px;
+    left: -10px;
+    background-color: sienna;
+    /*display: none;*/
+    opacity: 1;
+    transition: top 0.2s ease-in;
+}
 
 .collectable, .Enemy, .platform{
     position: absolute;
 }
 
 /*Lives*/
-#pizzalife1 {
+#circle1 {
 	position: absolute;
-	left:40px;
-	display:inline-block;
+	left:0px;
 	padding:0px;
 	width: 100px; 
 	height: 100px;
 	border-radius: 50%;
 }
-#pizzalife2 {	
+#circle2 {	
     position: absolute;	
-    left:100px; 
-    display:inline-block;	
+    left:60px; 
     padding:0px;
-    width: 100px;
-    height: 100px;
+    width: 100px; 
+	height: 100px;
     border-radius: 50%;
 }
-#pizzalife3 {	
+#circle3 {	
     position: absolute;	
-    left:160px;
-    display:inline-block;
+    left:120px;
     padding:0px;	
     width: 100px; 
-    height: 100px;
+	height: 100px;
     border-radius: 50%;	
 }
 #slice {
@@ -87,21 +111,25 @@
 	right: 0;
 	width: 50%; 
 	height: 50%;
+	-webkit-transform-origin: 0% 100%;
 	transform-origin: 0% 100%;
 }
 #slice:first-child {
+	-webkit-transform: rotate(-25deg) skewY(-40deg);
 	transform: rotate(-25deg) skewY(-40deg);
 
 }
 #slice-contents {
 	position: absolute;
-	left: -100%;
-	width: 200%; height: 200%;
-	border-radius: 50%;
 	background: url("../images/pizza-cut.png");
+	left: -100%;
+	width: 200%;
+	height: 200%;
+	border-radius: 50%;
 	transition: background-color .5s;
 }
 #slice:first-child #slice-contents {
+    -webkit-transform: skewY(40deg);
 	transform: skewY(40deg);
 
 }
