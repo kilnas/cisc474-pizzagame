@@ -24,8 +24,19 @@
 }
 
 #score {
-    display:inline-block;
-    font-family:Impact, Charcoal, sans-serif
+    /*display:inline-block;*/
+    font-family:Impact, Charcoal, sans-serif;
+    color:#DFA060;
+    float:right;
+    margin-bottom: -11px;
+}
+#points {
+    float:right;
+    width:40px;
+    height:25px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: center;
 }
 
 
@@ -57,7 +68,7 @@
     /*-webkit-transition: transform 0s linear;
     transition: transform 0s linear;*/
     /*-webkit-transition: all 0.3s ease-out , top 0.5s ease-in;*/
-    transition: all 0.3s ease-out, top .3s cubic-bezier(0,.99,.01,1);
+    transition: all 0.3s ease-out, top .3s cubic-bezier(0,.99,.01,1), transform 0.5s ease-out;
     top: -100px;
     left: 20px;
     z-index: 1;
@@ -126,7 +137,7 @@
 	width: 200%;
 	height: 200%;
 	border-radius: 50%;
-	transition: background-color .5s;
+	transition: background-color .8s;
 }
 #slice:first-child #slice-contents {
     -webkit-transform: skewY(40deg);
@@ -134,7 +145,7 @@
 
 }
 #slice-contents:hover {
-    background: red;
+    background: transparent;
 }
 /*lives end*/
 

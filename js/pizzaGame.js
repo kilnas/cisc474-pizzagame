@@ -5,10 +5,11 @@
 //------GLOBAL VARIABLES
 
 var PIZZAROTATE_DEG = 0;
-var ROTATE_VAL = 25;
+var ROTATE_VAL = 30;
 var PIZZASPEED = 15;
 var GROUNDLINE = 400;
 var GRAVITY = 9.8;
+var FRICTION = .10;
 
 //-------------- MODEL
 
@@ -46,7 +47,7 @@ var PizzaGame = function(level, pizzaPlayer, door){ // game object
             self.ingredientsComplete = true;
             self.door.isUnlocked = true;
             console.log("You collected all the ingredients! Now you can get toppings and be eaten.");
-            alert("You collected all the ingredients! Now you can get toppings and be eaten.");
+            //alert("You collected all the ingredients! Now you can get toppings and be eaten.");
         }
     };
 }
@@ -59,6 +60,8 @@ var PizzaPlayer = function(xPos, yPos, width, height){ // main character player
     this.width = width;
     this.height = height;
     this.yVel = 0;
+    this.xVel = 0;
+    this.isMoving = false;
     this.isJumping = false;
     this.isOnPlatform = false;
     this.toppings = [];
@@ -69,29 +72,42 @@ var PizzaPlayer = function(xPos, yPos, width, height){ // main character player
     this.isHittingIngredient = false;
 
     this.moveLeft = function(value){
-        self.xPos = self.xPos - value;
+        //console.log(self.xVel);
+            self.xVel = -200;
+            self.isMoving = true;
+        if(self.isJumping){
+          
+        }else{
+            //self.xPos = self.xPos - value;
+        }
         
     }
     
     this.moveRight = function(value){
-        self.xPos = self.xPos + value;
+        //console.log(self.xVel);
+        self.xVel = 200;
+        self.isMoving = true;
+        if(self.isJumping){ // if jumping
+            //self.xVel = 60;
+            //self.isMoving = true;
+        }else{
+            //self.xPos = self.xPos + value;
+        }
+        
         
     }
     
+    
+    
     this.jump = function(){
         if (self.isJumping == false) {
-            self.yVel = -60;//-60
+            self.yVel = -50;//-60
+            
         self.isJumping = true;
         }
      
     }
-    
-    //this.initialize();
-    
-     /*while(self.yPos <= GROUNDLINE){
-        self.yPos = self.yPos + 10;
-        console.log(self.yPos);}
-    drawPizzaPlayer(self); */
+
     
     
 }
@@ -106,7 +122,7 @@ var Platform = function(xPos, yPos, width, height){
 
 //return true if player is on the given platform
 var playerOnPlatform = function(player, platform){
-    var tol = 10; //height tolerance (within X pixels of platform height counts as on platform)
+    var tol = 30; //height tolerance (within X pixels of platform height counts as on platform)
 
     return(
         player.yPos + player.height >= platform.yPos - tol //player is at platform height given tolerance
@@ -114,8 +130,47 @@ var playerOnPlatform = function(player, platform){
         && player.xPos < platform.xPos + platform.width//player left edge <= platform right edge
         && player.xPos + player.width > platform.xPos//player right edge >= platform left edge
         );
-        
 }
+
+//Check if player is on ANY platform in game & return that platform
+var playerOnAnyPlatform = function(game){
+    var platform = null;
+    for(var i=0; i < game.listOfPlatforms.length; i++){
+        if(playerOnPlatform(game.pizzaPlayer, game.listOfPlatforms[i])){
+            platform = game.listOfPlatforms[i];
+            return platform;
+        };
+    }
+    //if not on platform, return null
+    return platform;
+}
+
+//update game according to whether player landed on or fell off platform
+var checkPlatformEvents = function(game){
+    
+    var landedPlat = playerOnAnyPlatform(game); //current platform
+    var pizza = game.pizzaPlayer;
+    
+     //if moving down, check if landed on platform
+    if(pizza.yVel >= 0 && landedPlat != null){
+        pizza.yPos = landedPlat.yPos - pizza.height;
+        pizza.yVel = 0;
+        pizza.isJumping = false;
+        pizza.isOnPlatform = true;
+    }
+    
+        
+     //if already on platform, check if moved off the platform
+    if(pizza.isOnPlatform){ 
+        //console.log("pizza left edge at " + pizza1.xPos + ", platform right edge at " + (testPlatform.xPos + testPlatform.width)); 
+        //console.log("pizza at (" + pizza1.xPos + ", " + pizza1.yPos + "), platform at (" + testPlatform.xPos + ", " + testPlatform.yPos + ")"); 
+         if(landedPlat == null){
+             pizza.isOnPlatform = false;
+             //apply gravity?
+             pizza.isJumping = true;
+           }
+        }
+};
 
 //The door for completing the game. Unlocks after you collect the basic ingredients.
 var Door = function(xPos, yPos, width, height){
@@ -216,15 +271,23 @@ var checkCollisions = function(game){
     }
     
     //check enemies
-    for(var i=0; i < game.listOfEnemies.length; i++){
-        if(colliding(game.pizzaPlayer, game.listOfEnemies[i])&& !game.pizzaPlayer.isHittingEnemy){
+    var hitEnemyThisRound = false;
+    for(var i=0; i < game.listOfEnemies.length && !hitEnemyThisRound; i++){
+        //if colliding with enemy and not already hitting another enemy, do stuff
+        if(colliding(game.pizzaPlayer, game.listOfEnemies[i]) && !game.pizzaPlayer.isHittingEnemy){
           //make lives go down or w/e depending on enemy
-         PizzaGame.lives -= 1;
+         hitEnemyThisRound = true;
          game.pizzaPlayer.isHittingEnemy=true;
+         game.lives -= 1;
+         drawLives(game);
          console.log("you got eaten a bit!")
-        } else if(!colliding(game.pizzaPlayer, game.listOfEnemies[i])){
-            game.pizzaPlayer.isHittingEnemy=false;
-        }
+        } 
+    }
+    
+    //if we aren't hitting anything, reset isHittingEnemy. Now we can hit enemies again.
+    if(!hitEnemyThisRound){
+        //console.log("not hitting enemies");
+        //game.pizzaPlayer.isHittingEnemy=false;
     }
     
     //check door
@@ -245,24 +308,33 @@ var Enemy = function(xPos, yPos, type, speed, width, height,minx,maxx){
     this.yPos=yPos;
     this.width = width;
     this.height = height;
+    this.leftEdge=this.xPos-90;
+    this.rightEdge=this.xPos+90;
     this.minx=minx;
     this.maxx=maxx;
-  
+    var count=1;
     this.setPosition=function(x,y){
         self.xPos=x;
         self.yPos=y;
     };
     
     this.updateEnemy = function(){
-          if (self.xPos<100){
-             self.xPos+=speed;
+      
+        self.xPos+=count;
+          if(self.xPos<minx){
+              count*=-1;
+              self.xPos+=speed;
+              self.xPos=minx;
           }
-          else if(self.xPos>100){
+          else if(self.xPos>maxx){
+              count*=-1;
               self.xPos-=speed;
+              self.xPos=maxx;
           }
 
     }
 }
+
    
 
 
@@ -330,7 +402,7 @@ var drawEnemies = function(game){
         drawEnemy(game.listOfEnemies[i]);
        game.listOfEnemies[i].updateEnemy();
     }
-    
+      
    
 }
 //draw a single collectable item
@@ -482,6 +554,7 @@ var drawPlatforms = function(game){
     //redraw
     for(var i=0; i < game.listOfPlatforms.length; i++){
         drawPlatform(game.listOfPlatforms[i]);
+        //console.log("platform: " + game.listOfPlatforms[i].width + ", " + game.listOfPlatforms[i].height);
     }
 }
 
@@ -587,8 +660,9 @@ console.log(testGame.isRunning);
 //testenemy
 var testEnemy = [
     
-   new Enemy(200,400,"Squirrel",10,20,20,-5,10),
-   new Enemy(400,400,"Bird", 10, 20, 20, -10,10)
+   new Enemy(200,400,"Squirrel",10,20,20,150,250),
+   new Enemy(400,300,"Bird", 10, 20, 20, 300,450),
+   new Enemy(400,100,"Bird", 10,20,20,450,550)
     ];
 
 var testIngredients = [
@@ -602,10 +676,12 @@ var testToppings = [
     new Collectable("pepperoni", 50, false, 600, 300, 20, 20)
 ];
 
-var testPlatform = new Platform(300, 400, 200, 20);
+
+//75 is the ideal vertical distance btwn platforms
 var testPlatforms = [
-    //new Platform(300, 400, 200, 20)
-    testPlatform
+    new Platform(300, 350, 120, 20),
+    new Platform(400, 275, 100, 20),
+    new Platform(300, 200, 200, 20)
 ];
 
 testGame.listOfIngredients = testIngredients;
@@ -629,31 +705,33 @@ var testUpdate = function(){
          if (pizza1.isJumping) {
             pizza1.yVel += GRAVITY; 
             pizza1.yPos += pizza1.yVel;
+            //console.log("YVEL: " + pizza1.yVel);
             //console.log("YLOC: " + pizza1.yPos);
+            FRICTION = .25;
          if (pizza1.yPos > GROUNDLINE) {
              pizza1.yPos = GROUNDLINE;
              pizza1.yVel = 0;
              pizza1.isJumping = false;
+             //console.log("YVEL at groundline: " + pizza1.yVel);
             }
+        }else{
+            FRICTION = .1;
         }
         
-        //NOTE: FIX LATER -- rn jumps onto platform from below instead of above
-        if(!pizza1.isOnPlatform && playerOnPlatform(pizza1, testPlatform)){ //if not on platform, check if landed on platform
-            console.log("im on da platfoooom!");
-            pizza1.yPos = testPlatform.yPos - pizza1.height;
-            pizza1.yVel = 0;
-            pizza1.isJumping = false;
-            pizza1.isOnPlatform = true;
-        }    
-        
-        if(pizza1.isOnPlatform){ //if on platform, check if moved off the platform
-           console.log("pizza at " + pizza1.xPos + ", platform at " + (testPlatform.xPos + testPlatform.width)); 
-           if(!playerOnPlatform(pizza1, testPlatform)){
-               pizza1.isOnPlatform = false;
-               //apply gravity?
-               pizza1.isJumping = true;
-           }
+        if(pizza1.isMoving){//&& pizza1.isJumping
+            //console.log(pizza1.xVel);
+            pizza1.xVel = pizza1.xVel * FRICTION;
+            pizza1.xPos += pizza1.xVel;
+        }else if(!pizza1.isMoving){ //&& !pizza1.isJumping
+            pizza1.xVel = 0;
         }
+        if(pizza1.xVel <= 5 && pizza1.xVel >= -5){
+            pizza1.isMoving = false;
+            
+        }
+     
+     //check if landed on or fell off a platform 
+     checkPlatformEvents(testGame);
 
         testUpdate();
     }, 70);

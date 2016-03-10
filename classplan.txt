@@ -16,6 +16,7 @@ PizzaGame
 - list of enemies
 - list of ingredients (mandatory)
 - list of topppings (optional to collect)
+- list of platforms
 - PizzaPlayer - kalina
 - Door
 - height
@@ -43,6 +44,10 @@ Door - Danielle - DONE
 - xPos
 - yPos
 
+Platforms - Danielle
+- xPos, yPos
+= height, width
+
 UI
 
 -start button
@@ -55,8 +60,8 @@ drawUI
     - *display score
 -draw game
     - drawPlayer -kalina
-    - drawEnemies
-    - drawCollectibles
+    - drawEnemies - Lauren
+    - drawCollectibles - Danielle
     - drawDoor -kalina
 
 
