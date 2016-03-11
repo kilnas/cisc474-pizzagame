@@ -28,6 +28,7 @@ var PizzaGame = function(level, pizzaPlayer, door){ // game object
     this.width = 900;
     this.height = 400;
     this.isRunning = false;
+    this.isPaused = false;
     //this.ingredientsComplete = false;
 
     this.update = function(){
@@ -46,6 +47,9 @@ var PizzaGame = function(level, pizzaPlayer, door){ // game object
         if(complete){
             self.ingredientsComplete = true;
             self.door.isUnlocked = true;
+            drawDoor(self.door);
+            
+           
             console.log("You collected all the ingredients! Now you can get toppings and be eaten.");
             //alert("You collected all the ingredients! Now you can get toppings and be eaten.");
         }
@@ -104,7 +108,7 @@ var PizzaPlayer = function(xPos, yPos, width, height){ // main character player
         
     }
     
-    
+   // self.xPos.clamp(0, PizzaGame.width-self.width);
     
     this.jump = function(){
         if (self.isJumping == false) {
@@ -129,13 +133,13 @@ var Platform = function(xPos, yPos, width, height){
 
 //return true if player is on the given platform
 var playerOnPlatform = function(player, platform){
-    var tol = 30; //height tolerance (within X pixels of platform height counts as on platform)
-
+    var yTol = 30; //height tolerance (within Y pixels of platform height counts as on platform)
+    var xAntiTol = player.width/4; //width tolerance (MUST have at least X pixels on platform width to count as on platform)
     return(
-        player.yPos + player.height >= platform.yPos - tol //player is at platform height given tolerance
-        && player.yPos + player.height <= platform.yPos + tol 
-        && player.xPos < platform.xPos + platform.width//player left edge <= platform right edge
-        && player.xPos + player.width > platform.xPos//player right edge >= platform left edge
+        player.yPos + player.height >= platform.yPos - yTol //player is at platform height given tolerance
+        && player.yPos + player.height <= platform.yPos + yTol 
+        && player.xPos < platform.xPos + platform.width - xAntiTol //player left edge <= platform right edge
+        && player.xPos + player.width > platform.xPos + xAntiTol //player right edge >= platform left edge
         );
 }
 
@@ -160,7 +164,7 @@ var checkPlatformEvents = function(game){
     
      //if moving down, check if landed on platform
     if(pizza.yVel >= 0 && landedPlat != null){
-        pizza.yPos = landedPlat.yPos - pizza.height;
+        pizza.yPos = landedPlat.yPos - pizza.height - landedPlat.height;
         pizza.yVel = 0;
         pizza.isJumping = false;
         pizza.isOnPlatform = true;
@@ -287,7 +291,7 @@ var checkCollisions = function(game){
                 game.pizzaPlayer.isHittingEnemy = true;
                 game.lives -= 1;
                 drawLives(game);
-                console.log("you got eaten a bit!");
+                //console.log("you got eaten a bit!");
             //console.log("enemy: " + game.listOfEnemies[i].xPos + ", " + game.listOfEnemies[i].yPos);
             //console.log("you: " + game.pizzaPlayer.xPos + ", " + game.pizzaPlayer.yPos);
             //console.log("isHitting: " + game.pizzaPlayer.isHittingEnemy + "; this round: " + hitEnemyThisRound);
@@ -305,6 +309,7 @@ var checkCollisions = function(game){
     if(colliding(game.pizzaPlayer, game.door) && !game.pizzaPlayer.isHittingDoor){
         console.log("HIT DOOR");
         game.pizzaPlayer.isHittingDoor = true;
+        winGame(game);
     }else if(!colliding(game.pizzaPlayer, game.door)){
         game.pizzaPlayer.isHittingDoor = false;
     }
@@ -511,21 +516,21 @@ var drawLives = function(game) {
         livesFlag = false;
     }
     if (game.lives == 2){
-        if ($('#circle3').length > 0) { //check if circle3 exists
+        if ($('#circle3').length > 0) { //check if life 3 exists
             var lives = document.getElementById('lives');
             var circle3 = document.getElementById('circle3');
             lives.removeChild(circle3);
         }
     }
     if (game.lives == 1){
-        if ($('#circle2').length > 0) { //check if circle2 exists
+        if ($('#circle2').length > 0) { //check if life 2 exists
             var lives = document.getElementById('lives');
             var circle2 = document.getElementById('circle2');
             lives.removeChild(circle2);
         }
     }
     if (game.lives == 0){
-        if ($('#circle1').length > 0) { //check if circle1 exists
+        if ($('#circle1').length > 0) { //check if life 1 exists
             var lives = document.getElementById('lives');
             var circle1 = document.getElementById('circle1');
             lives.removeChild(circle1);
@@ -534,6 +539,7 @@ var drawLives = function(game) {
 }
 
 var drawDoor = function(door){
+    $('#mouthDoor').remove();
     var $door = document.createElement("div");
     $door.setAttribute('id', 'mouthDoor');
     $door.style.left = door.xPos + 'px';
@@ -541,10 +547,18 @@ var drawDoor = function(door){
     $door.style.width = door.width + 'px';
     $door.style.height = door.height + 'px';
     //$door.css('left', xPos + "px");
-    
     $('#gameBoard').append($door);
     
+     if(door.isUnlocked){ // door draw open // not working?
+            $('#mouthDoor').css('background-image',  'url('+'../images/mouthopen.jpg' +')');
+    }else{
+        $('#mouthDoor').css('background-image',  'url('+'../images/mouthclose.png' +')');
+        
+    }
+    
+    
 }
+
 
 var drawPlatform = function(platform){
     var $item = document.createElement("div");
@@ -582,6 +596,21 @@ var drawGround = function(height){
 }
 
 //-------------------------------------- CONTROLLER stuff
+
+var winGame = function(game){
+    if(game.door.isUnlocked){
+        //console.log('wonton');
+    }else{
+        //console.log('you need to do the basics');
+    }
+}
+var loseGame = function(game){
+    if(game.lives < 0){
+        console.log('lose');
+    }
+}
+
+
 
 
 
@@ -639,7 +668,7 @@ var movePlayer = function(pizzaPlayer){
 var startGame = function(game, player){
   //testCollide();
     if(game.isRunning){
-        drawDoor(testDoor);
+        drawDoor(game.door);
         drawGround(20);
         if(player.xPos >= GROUNDLINE){
             $("#pizzaPlayer").css({
@@ -663,22 +692,39 @@ $("#startButton").click(function(){
     
 });
 
+
+$("#pauseButton").click(function(){
+    if(!testGame.isPaused){
+        testGame.isRunning = false;
+        testGame.isPaused = true;
+        console.log(testGame.isRunning);
+    }else{
+        testGame.isRunning = true;
+        testGame.isPaused = false; 
+    }
+    
+});
+
+$("#restartButton").click(function(){
+ 
+    
+});
+
+
+
 //----------------------------------------- game stuff
 
 var pizza1 = new PizzaPlayer(20, 400, 50, 50);
-var testDoor = new Door(500, 200, 100, 100);
+var testDoor = new Door(0, 400, 100, 100);
 var testGame = new PizzaGame(1, pizza1, testDoor);
-
-
-console.log(testGame.isRunning);
 
 
 //testenemy
 var testEnemy = [
     
-   new Enemy(200,400,"Squirrel",10,20,20,150,250),
-   new Enemy(400,300,"Bird", 10, 20, 20, 300,450),
-   new Enemy(400,100,"Bird", 10,20,20,450,550)
+   new Enemy(200,450,"Squirrel",100,20,20,150,250),
+   new Enemy(400,330,"Bird", 100, 20, 20, 300,450),
+   new Enemy(400,180,"Bird", 100,20,20,0,550)
     ];
 
 var testIngredients = [
@@ -694,10 +740,26 @@ var testToppings = [
 
 
 //75 is the ideal vertical distance btwn platforms
+var BOTTOM = 375;
+var TOP = 75;
+var HEIGHT = 20;
+var DIST = 75;
+
 var testPlatforms = [
-    new Platform(300, 350, 120, 20),
-    new Platform(400, 275, 100, 20),
-    new Platform(300, 200, 200, 20)
+    new Platform(0, BOTTOM, 200, HEIGHT), //row 1
+    new Platform(450, BOTTOM, 200, HEIGHT),
+    
+    new Platform(testGame.width-100, BOTTOM-DIST, 100, HEIGHT), //row 2
+    new Platform(275, BOTTOM-DIST, 175, HEIGHT),
+    
+    new Platform(425, BOTTOM-(2*DIST), 225, HEIGHT), //row3
+    new Platform(75, BOTTOM-(2*DIST), 175, HEIGHT),
+    
+    new Platform(550, TOP + DIST, 175, HEIGHT), //row 4
+    new Platform(200, TOP + DIST, 100, HEIGHT),
+    
+    new Platform(testGame.width-125, TOP, 75, HEIGHT), // row 5
+    new Platform(0, TOP, 175, HEIGHT)
 ];
 
 testGame.listOfIngredients = testIngredients;
@@ -716,6 +778,9 @@ var testUpdate = function(){
         drawCollectables(testGame);
         drawEnemies(testGame);
         drawLives(testGame);
+        
+        
+
         
         
          if (pizza1.isJumping) {
