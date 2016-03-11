@@ -75,6 +75,10 @@ var PizzaPlayer = function(xPos, yPos, width, height){ // main character player
         //console.log(self.xVel);
             self.xVel = -200;
             self.isMoving = true;
+            
+            
+            
+        //UNUSED
         if(self.isJumping){
           
         }else{
@@ -87,6 +91,9 @@ var PizzaPlayer = function(xPos, yPos, width, height){ // main character player
         //console.log(self.xVel);
         self.xVel = 200;
         self.isMoving = true;
+        
+        
+        //UNUSED
         if(self.isJumping){ // if jumping
             //self.xVel = 60;
             //self.isMoving = true;
@@ -272,22 +279,26 @@ var checkCollisions = function(game){
     
     //check enemies
     var hitEnemyThisRound = false;
-    for(var i=0; i < game.listOfEnemies.length && !hitEnemyThisRound; i++){
-        //if colliding with enemy and not already hitting another enemy, do stuff
-        if(colliding(game.pizzaPlayer, game.listOfEnemies[i]) && !game.pizzaPlayer.isHittingEnemy){
-          //make lives go down or w/e depending on enemy
-         hitEnemyThisRound = true;
-         game.pizzaPlayer.isHittingEnemy=true;
-         game.lives -= 1;
-         drawLives(game);
-         console.log("you got eaten a bit!")
-        } 
+    for(var i=0; i < game.listOfEnemies.length; i++){
+        //if this is the first enemy we collided with this round, do stuff
+         if(colliding(game.pizzaPlayer, game.listOfEnemies[i]) && !hitEnemyThisRound){
+         hitEnemyThisRound = true; //don't check for any other collisions
+            if(!game.pizzaPlayer.isHittingEnemy){//only acknowledge this collision if you're not already hitting enemy from last round
+                game.pizzaPlayer.isHittingEnemy = true;
+                game.lives -= 1;
+                drawLives(game);
+                console.log("you got eaten a bit!");
+            //console.log("enemy: " + game.listOfEnemies[i].xPos + ", " + game.listOfEnemies[i].yPos);
+            //console.log("you: " + game.pizzaPlayer.xPos + ", " + game.pizzaPlayer.yPos);
+            //console.log("isHitting: " + game.pizzaPlayer.isHittingEnemy + "; this round: " + hitEnemyThisRound);
+         }
+        }
     }
     
-    //if we aren't hitting anything, reset isHittingEnemy. Now we can hit enemies again.
+    //if we didn't hit anything this round, reset isHittingEnemy. Now we can hit enemies again.
     if(!hitEnemyThisRound){
-        //console.log("not hitting enemies");
-        //game.pizzaPlayer.isHittingEnemy=false;
+       // console.log("did not hit any enemies");
+        game.pizzaPlayer.isHittingEnemy=false;
     }
     
     //check door
@@ -587,7 +598,7 @@ var movePlayer = function(pizzaPlayer){
            //$("#pizzaPlayer").prop("-webkit-transform", "rotate(-3deg)");
            //$("#pizzaPlayer").animate({transform: 'rotate(-3deg)'});
            PIZZAROTATE_DEG -= ROTATE_VAL;
-          
+    
            
            //drawPizzaPlayer(pizzaPlayer);
            /*console.log("pizza X: " + pizzaPlayer.xPos);
@@ -601,19 +612,24 @@ var movePlayer = function(pizzaPlayer){
             PIZZAROTATE_DEG += ROTATE_VAL;
                 
             //drawPizzaPlayer(pizzaPlayer);
-        
             
-        }else if(code == 38 || code == 87){//up
+        }else if((code == 39 || code == 68) && (code == 38 || code == 87)){//move right and up // ATTEMPT
+            pizzaPlayer.moveRight(PIZZASPEED);
+            //$("#pizzaPlayer").prop("transform", "rotate(3deg)");
+            PIZZAROTATE_DEG += ROTATE_VAL;
+                
             pizzaPlayer.jump();
-         
-            //drawPizzaPlayer(pizzaPlayer);
-            
             
         }else{
             // do nothing if other keys
        
         }
-   
+        
+        if(code == 38 || code == 87){//up
+            pizzaPlayer.jump();
+         
+            //drawPizzaPlayer(pizzaPlayer);
+        }
     });
      
     

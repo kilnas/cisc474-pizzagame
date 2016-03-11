@@ -25,7 +25,7 @@ PizzaGame
 - isPaused
 
 
-Enemy (squirrels, birds)
+Enemy (squirrels, birds) - Lauren
 - speed
 - type
 - move
@@ -67,14 +67,28 @@ drawUI
 
 Public Methods
 - collision detection(x1 y1 x2 y2) --> true/false DONE (Danielle)
-- collision reaction (if pizzaPlayer collides w Thing, +/- score, - lives, complete level, etc..)
+- collision reaction (if pizzaPlayer collides w Thing, +/- score, - lives, complete level, etc..) - Danielle/Lauren
 - isOutOfBounds(x, y)
 - getRandomPos --> give a random unoccuppied position; could be on ground or platform
 - endGame
 - startGame -kalina
 - resetGame
 - pauseGame ?
--gravity
+- gravity
 
-    
 
+What else do we need?
+- *score display
+- opening/ending screen? 
+- instructions or help button to show key moves & game rules?
+- *Level Layout (define list of platforms, collectables, and enemies & their placements)
+- *game over function
+- *game reset function
+- *game reset button
+- game pause function/button
+- game over reactions/visuals/sounds
+- lose a life reactions/visuals/sounds
+- *images for collectables/enemies
+- collectable reactions/visuals
+- *draw collected items on pizza or in menu bar or w/e
+- door animation
