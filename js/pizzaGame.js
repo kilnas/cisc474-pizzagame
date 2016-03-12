@@ -290,6 +290,8 @@ var checkCollisions = function(game){
             if(!game.pizzaPlayer.isHittingEnemy){//only acknowledge this collision if you're not already hitting enemy from last round
                 game.pizzaPlayer.isHittingEnemy = true;
                 game.lives -= 1;
+                $('#pizzaPlayer').addClass('.flashRed');
+                loseGame(game);
                 drawLives(game);
                 //console.log("you got eaten a bit!");
             //console.log("enemy: " + game.listOfEnemies[i].xPos + ", " + game.listOfEnemies[i].yPos);
@@ -403,14 +405,20 @@ var drawEnemy = function(Enemy){
     $Enemy.style.top= Enemy.yPos+"px";
     $Enemy.style.width=Enemy.width+"px";
     $Enemy.style.height=Enemy.height+"px";
-    $Enemy.style.backgroundColor = "red";
     $Enemy.classList.add("Enemy");
+    $Enemy.style.backgroundSize = Enemy.width + "px " + Enemy.height + "px";
+     
+    if(Enemy.type == "squirrel" || Enemy.type == "Squirrel"){ 
+        $Enemy.classList.add("squirrel");
+    }
+    else{
+       $Enemy.classList.add("bird");
+      
+    }
+    
     $("#gameBoard").append($Enemy);
-   
-  /* for(var i=0; i < game.listOfEnemies.length; i++){
-    drawEnemy(game.listOfEnemies[i]);
-    }*/
 }
+
 var drawEnemies = function(game){
     $(".Enemy").remove();
     
@@ -600,13 +608,21 @@ var drawGround = function(height){
 var winGame = function(game){
     if(game.door.isUnlocked){
         //console.log('wonton');
+       
+        $('#winScreen').css('opacity', 1);
+        $('#pizzaPlayer').css('height', '0px');
+        $('#pizzaPlayer').css('width', '5px');
+        //$('#pizzaPlayer').css('opacity', .1);
+        game.pizzaPlayer.yPos += 30;
+        game.pizzaPlayer.xPos =  game.door.xPos + (game.door.width/2);
     }else{
         //console.log('you need to do the basics');
     }
 }
 var loseGame = function(game){
     if(game.lives < 0){
-        console.log('lose');
+        //console.log('lose');
+        $('#loseScreen').css('opacity', 1);
     }
 }
 
@@ -715,16 +731,16 @@ $("#restartButton").click(function(){
 //----------------------------------------- game stuff
 
 var pizza1 = new PizzaPlayer(20, 400, 50, 50);
-var testDoor = new Door(0, 400, 100, 100);
+var testDoor = new Door(400, 400, 100, 100);
 var testGame = new PizzaGame(1, pizza1, testDoor);
 
 
 //testenemy
 var testEnemy = [
     
-   new Enemy(200,450,"Squirrel",100,20,20,150,250),
-   new Enemy(400,330,"Bird", 100, 20, 20, 300,450),
-   new Enemy(400,180,"Bird", 100,20,20,0,550)
+   new Enemy(200,450,"Squirrel",100,75,75,150,250),
+   new Enemy(400,330,"Bird", 100, 75, 75, 300,450),
+   new Enemy(400,180,"Bird", 100,75,75,0,550)
     ];
 
 var testIngredients = [
