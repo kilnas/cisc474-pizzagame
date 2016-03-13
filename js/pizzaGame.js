@@ -47,7 +47,17 @@ var PizzaGame = function(level, pizzaPlayer, door){ // game object
         if(complete){
             self.ingredientsComplete = true;
             self.door.isUnlocked = true;
+            
+            setTimeout(function(){
+            var audioElement = document.createElement('audio');
+            audioElement.setAttribute('src', '../sounds/comehere.mp3');
+            audioElement.setAttribute('autoplay', 'autoplay');
             drawDoor(self.door);
+            },350);
+            
+            
+            
+            
             
            
             console.log("You collected all the ingredients! Now you can get toppings and be eaten.");
@@ -229,7 +239,19 @@ var collectItem = function(game, itemIndex, array){
     var item = array[itemIndex];
     //if ingredient, check if we can unlock the door now
     if(item.isRequired){
+        if (item.type == "sauce"){
+            $('#pizzaPlayer').css('background-color', 'red');
+        }
+        if (item.type == "cheese"){
+            //todo
+        }
+        
+        var audioElement = document.createElement('audio');
+        audioElement.setAttribute('src', '../sounds/collectsound.mp3');
+        audioElement.setAttribute('autoplay', 'autoplay');
+        
         item.isCollected = true;
+        
         game.score += item.points;
         game.checkIngredientCompletion(); 
         console.log("collected " + item.type + " at " + item.xPos + ", " + item.yPos);
@@ -237,6 +259,20 @@ var collectItem = function(game, itemIndex, array){
     }
     //if topping, and allowed to collect toppings, increase score
     else if(game.ingredientsComplete){
+        if (item.type == "pepperoni"){
+            //todo
+        }
+        if (item.type == "anchovies"){
+            //todo
+        }
+        if (item.type == "mushrooms"){
+            //todo
+        }
+        
+        var audioElement = document.createElement('audio');
+        audioElement.setAttribute('src', '../sounds/collectsound.mp3');
+        audioElement.setAttribute('autoplay', 'autoplay');
+        
         item.isCollected = true;
         game.score += item.points;
         console.log("collected " + item.type + " at " + item.xPos + ", " + item.yPos);
@@ -290,14 +326,13 @@ var checkCollisions = function(game){
             if(!game.pizzaPlayer.isHittingEnemy){//only acknowledge this collision if you're not already hitting enemy from last round
                 game.pizzaPlayer.isHittingEnemy = true;
                 game.lives -= 1;
+                var audioElement = document.createElement('audio');
+                audioElement.setAttribute('src', '../sounds/squirrel.mp3');
+                audioElement.setAttribute('autoplay', 'autoplay');
                 $('#pizzaPlayer').addClass('.flashRed');
                 loseGame(game);
                 drawLives(game);
-                //console.log("you got eaten a bit!");
-            //console.log("enemy: " + game.listOfEnemies[i].xPos + ", " + game.listOfEnemies[i].yPos);
-            //console.log("you: " + game.pizzaPlayer.xPos + ", " + game.pizzaPlayer.yPos);
-            //console.log("isHitting: " + game.pizzaPlayer.isHittingEnemy + "; this round: " + hitEnemyThisRound);
-         }
+            }
         }
     }
     
@@ -309,14 +344,19 @@ var checkCollisions = function(game){
     
     //check door
     if(colliding(game.pizzaPlayer, game.door) && !game.pizzaPlayer.isHittingDoor){
-        console.log("HIT DOOR");
+        //console.log("HIT DOOR");
         game.pizzaPlayer.isHittingDoor = true;
         winGame(game);
+        
     }else if(!colliding(game.pizzaPlayer, game.door)){
         game.pizzaPlayer.isHittingDoor = false;
     }
 }
 
+function flashRed(){
+    var time=1;
+   
+}
 
 var Enemy = function(xPos, yPos, type, speed, width, height,minx,maxx){
     var self=this;
@@ -353,21 +393,6 @@ var Enemy = function(xPos, yPos, type, speed, width, height,minx,maxx){
     }
 }
 
-   
-
-
-// var updateToppings = function(){
-//     var toppings = getToppings();
-//     var ingredients = getIngredients();
-//     var currToppingsLen = toppings.length;
-//         for (var i=0; i<toppings.length; i++){
-//             //self.drawTopping(i);
-//             currToppingsLength = toppings.length;
-//         }
-//     }
-//     if (currToppingsLen != toppings.length){
-//         updateToppings();
-//     }
 
 
 
@@ -378,6 +403,12 @@ var Enemy = function(xPos, yPos, type, speed, width, height,minx,maxx){
 var drawPizzaPlayer = function(pizzaPlayer){
     var xPos = pizzaPlayer.xPos + "px";
     var yPos = pizzaPlayer.yPos + "px";
+    if(pizzaPlayer.xPos<-5){
+     pizzaPlayer.xPos=0;
+    }
+    if(pizzaPlayer.xPos>870){
+    pizzaPlayer.xPos=850;  
+  }
     $("#pizzaPlayer").css("left", xPos);
     $("#pizzaPlayer").css("top", yPos);
     
@@ -385,18 +416,19 @@ var drawPizzaPlayer = function(pizzaPlayer){
                "-webkit-transform": "rotate(" + PIZZAROTATE_DEG + "deg)",
                "transform": "rotate(" + PIZZAROTATE_DEG + "deg)"
     });
+
            
            
     var drawTopping = function(){
         //apply abstract css class
-    }
+    };
     //do stuff with height/width scaling
-}
+};
 
 var drawScore = function(game){
     var points = document.getElementById('points');
     points.innerHTML = game.score.toString();
-}
+};
 
 //draw enemy
 var drawEnemy = function(Enemy){
@@ -610,11 +642,25 @@ var winGame = function(game){
         //console.log('wonton');
        
         $('#winScreen').css('opacity', 1);
+        //var $winScreen = document.createElement('div');
         $('#pizzaPlayer').css('height', '0px');
         $('#pizzaPlayer').css('width', '5px');
         //$('#pizzaPlayer').css('opacity', .1);
-        game.pizzaPlayer.yPos += 30;
-        game.pizzaPlayer.xPos =  game.door.xPos + (game.door.width/2);
+        //game.pizzaPlayer.yPos += 30;
+        game.pizzaPlayer.yPos = game.door.yPos + 40;
+        //game.pizzaPlayer.xVel = 0;
+        game.pizzaPlayer.xPos =  game.door.xPos + (game.door.width/2)
+        console.log("gamdoor " + game.door.xPos);
+        console.log("pizza" + game.pizzaPlayer.xPos);
+        game.isRunning = false;
+        drawPizzaPlayer(game.pizzaPlayer);
+         var audioElement = document.createElement('audio');
+        audioElement.setAttribute('src', '../sounds/eating.mp3');
+        audioElement.setAttribute('autoplay', 'autoplay');
+        
+        var audioElement2 = document.createElement('audio');
+        audioElement2.setAttribute('src', '../sounds/ahh.mp3');
+        audioElement2.setAttribute('autoplay', 'autoplay');
     }else{
         //console.log('you need to do the basics');
     }
@@ -623,6 +669,7 @@ var loseGame = function(game){
     if(game.lives < 0){
         //console.log('lose');
         $('#loseScreen').css('opacity', 1);
+        game.isRunning = false;
     }
 }
 
@@ -636,7 +683,6 @@ var movePlayer = function(pizzaPlayer){
     //console.log(pizzaPlayer);
     $("body").keydown(function(e){
         var code = e.which; //e.keyCode || 
-        
         
         if(code == 37 || code == 65){//move left
            pizzaPlayer.moveLeft(PIZZASPEED);
@@ -682,8 +728,7 @@ var movePlayer = function(pizzaPlayer){
 
 
 var startGame = function(game, player){
-  //testCollide();
-    if(game.isRunning){
+    //if(game.isRunning){
         drawDoor(game.door);
         drawGround(20);
         if(player.xPos >= GROUNDLINE){
@@ -693,35 +738,85 @@ var startGame = function(game, player){
             });
         }
         movePlayer(player);
-    testUpdate();
-    }  
-}
+    updateGame();
+    //console.log(player.yPos);
+    //}  
+};
+
+
+var restartGame = function(game, player){
+    game.isRunning = true;
+    game.score = 0;
+    drawScore(game);
+    game.lives = 3;
+    livesFlag = true;
+    drawLives(game.lives);
+    $('#pizzaPlayer').attr('style', '');
+    player.yPos = 400;
+    player.xPos = 20;
+    player.xVel = 0;
+    player.yVel = 0;
+    player.width = 60;
+    player.height = 60;
+    
+    //remake Player
+    pizza1 = makePlayer();
+    game.pizzaPlayer = pizza1;
+    
+    PIZZAROTATE_DEG = 0;
+    $('#winScreen').attr('style', '');
+    $('#loseScreen').attr('style', '');
+    game.door.isUnlocked = false;
+    drawDoor(game.door);
+    
+    drawPizzaPlayer(player);
+    //console.log(player.yPos);
+    
+    //reset collectables
+    game.listOfIngredients.forEach(function (item){
+        item.isCollected = false;
+    });
+     game.listOfToppings.forEach(function (item){
+        item.isCollected = false;
+    });
+    //$('#ground').attr('style', '');
+    //$('#winScreen').css('opacity', 0);
+    //$('#loseScreen').css('opacity', 0);
+    
+    startGame(mainGame, pizza1);
+    
+
+    
+    
+};
 
 
 //button press
 
 
 $("#startButton").click(function(){
-    testGame.isRunning = true;
+    mainGame.isRunning = true;
     livesFlag = true;
-    startGame(testGame, pizza1);
-    
+    startGame(mainGame, pizza1);
 });
 
 
 $("#pauseButton").click(function(){
-    if(!testGame.isPaused){
-        testGame.isRunning = false;
-        testGame.isPaused = true;
-        console.log(testGame.isRunning);
+    if(!mainGame.isPaused){
+        mainGame.isRunning = false;
+        mainGame.isPaused = true;
+        //console.log(testGame.isRunning);
     }else{
-        testGame.isRunning = true;
-        testGame.isPaused = false; 
+        mainGame.isRunning = true;
+        updateGame();
+        mainGame.isPaused = false; 
     }
     
 });
 
 $("#restartButton").click(function(){
+    //mainGame.isRunning = false;
+    restartGame(mainGame, pizza1);
  
     
 });
@@ -730,29 +825,32 @@ $("#restartButton").click(function(){
 
 //----------------------------------------- game stuff
 
-var pizza1 = new PizzaPlayer(20, 400, 50, 50);
-var testDoor = new Door(400, 400, 100, 100);
-var testGame = new PizzaGame(1, pizza1, testDoor);
 
 
-//testenemy
-var testEnemy = [
-    
-   new Enemy(200,450,"Squirrel",100,75,75,150,250),
-   new Enemy(400,330,"Bird", 100, 75, 75, 300,450),
-   new Enemy(400,180,"Bird", 100,75,75,0,550)
-    ];
+//Functions to generate Game Objects
+var makeEnemies = function(){ 
+    return ([
+    new Enemy(200,420,"Squirrel",350,50,50,100,250),
+    new Enemy(50, 25,"Squirrel", 350, 50, 50, 25,125),
+    new Enemy(450,175,"Squirrel", 350,50,50,400,570)
+    ]);
+};
 
-var testIngredients = [
-    new Collectable("sauce", 50, true, 300, 350, 20, 20),
-    new Collectable("cheese", 50, true, 500, 350, 20, 20)
-];
+var makeIngredients = function(){ 
+    return ([
+    new Collectable("sauce", 50, true, 600, 100, 20, 20),
+    new Collectable("cheese", 50, true, 350, 250, 20, 20)
+    ]);
+};
 
 
-var testToppings = [
-    new Collectable("anchovies", 50, false, 100, 300, 20, 20),
-    new Collectable("pepperoni", 50, false, 600, 300, 20, 20)
-];
+var makeToppings = function(){ 
+    return ([
+    new Collectable("anchovies", 50, false, 150, 25, 20, 20),
+    new Collectable("pepperoni", 50, false, 600, 300, 20, 20),
+    new Collectable("mushroom", 50, false, 800, 50, 20, 20)
+    ]);
+};
 
 
 //75 is the ideal vertical distance btwn platforms
@@ -761,11 +859,12 @@ var TOP = 75;
 var HEIGHT = 20;
 var DIST = 75;
 
-var testPlatforms = [
-    new Platform(0, BOTTOM, 200, HEIGHT), //row 1
+var makePlatforms = function(){ 
+    return ([
+    new Platform(-10, BOTTOM, 150, HEIGHT), //row 1
     new Platform(450, BOTTOM, 200, HEIGHT),
     
-    new Platform(testGame.width-100, BOTTOM-DIST, 100, HEIGHT), //row 2
+    new Platform(mainGame.width-100, BOTTOM-DIST, 200, HEIGHT), //row 2
     new Platform(275, BOTTOM-DIST, 175, HEIGHT),
     
     new Platform(425, BOTTOM-(2*DIST), 225, HEIGHT), //row3
@@ -774,29 +873,45 @@ var testPlatforms = [
     new Platform(550, TOP + DIST, 175, HEIGHT), //row 4
     new Platform(200, TOP + DIST, 100, HEIGHT),
     
-    new Platform(testGame.width-125, TOP, 75, HEIGHT), // row 5
+    new Platform(mainGame.width-125, TOP, 75, HEIGHT), // row 5
     new Platform(0, TOP, 175, HEIGHT)
-];
+    ]);
+};
 
-testGame.listOfIngredients = testIngredients;
-testGame.listOfToppings = testToppings;
-testGame.listOfPlatforms = testPlatforms;
 
-testGame.listOfEnemies=testEnemy;
+var makePlayer = function(){
+    return (new PizzaPlayer(20, 400, 50, 50));
+};
+
+
+//INITIALIZE GAME AND OBJECTS
+
+var pizza1 = makePlayer();
+var testDoor = new Door(775, 375, 100, 100);
+var mainGame = new PizzaGame(1, pizza1, testDoor);
+
+
+mainGame.listOfIngredients = makeIngredients();
+mainGame.listOfToppings = makeToppings();
+mainGame.listOfPlatforms = makePlatforms();
+mainGame.listOfEnemies= makeEnemies();
+
+
+
 
 //test update - checks for collisions and collectable updates every 70ms
-var testUpdate = function(){
+var updateGame = function(){
+    if(mainGame.isRunning){
+    
     setTimeout(function(){
         drawPizzaPlayer(pizza1); //note: draw before collision checks!
         
-        checkCollisions(testGame);
-        drawPlatforms(testGame);
-        drawCollectables(testGame);
-        drawEnemies(testGame);
-        drawLives(testGame);
-        
-        
-
+        checkCollisions(mainGame);
+        drawPlatforms(mainGame);
+        drawCollectables(mainGame);
+        drawEnemies(mainGame);
+        drawLives(mainGame);
+        drawScore(mainGame);
         
         
          if (pizza1.isJumping) {
@@ -828,10 +943,11 @@ var testUpdate = function(){
         }
      
      //check if landed on or fell off a platform 
-     checkPlatformEvents(testGame);
+     checkPlatformEvents(mainGame);
 
-        testUpdate();
-    }, 70);
+        updateGame();
+        }, 70);
+    }
 }
 
 //for testing the collision function
@@ -882,8 +998,6 @@ var testCollide = function(){
     console.log("Collision F: " + colliding(pizza1, sauce1));
     
 }
-
-
 
 
     

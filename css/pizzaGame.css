@@ -11,16 +11,13 @@
     width: 900px;
 }
 
-#startButton{
-    background: url("../images/pizza-button.png");
-}
-
-#startButton {
+button {
     border: solid;
-    border-radius: 9px;
+    border-radius: 50%;
     border-color: BurlyWood;
     font-weight:bold;
     color:#403030;
+    background: url("../images/pizza-button.png");
 }
 
 #score {
@@ -100,7 +97,7 @@
 /*Lives*/
 #circle1 {
 	position: absolute;
-	left:430px;
+	left:440px;
 	top:65px;
 	padding:0px;
 	width: 50px; 
@@ -110,7 +107,7 @@
 }
 #circle2 {
     position: absolute;	
-    left:460px; 
+    left:470px; 
     top:65px;
     padding:0px;
     width: 50px; 
@@ -120,7 +117,7 @@
 }
 #circle3 {	
     position: absolute;	
-    left:490px;
+    left:500px;
     top:65px;
     padding:0px;	
     width: 50px; 
@@ -192,7 +189,7 @@
     opacity: 0;
     z-index: 5;
     text-align: center;
-    padding-top: 50px;
+    padding-top: 0px;
     
 }
 
@@ -207,10 +204,4 @@
     z-index: 5;
     text-align: center;
     padding-top: 50px;
-}
-
-
-/* abstract pizza classes*/
-.plainPizza{
-    
 }

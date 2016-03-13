@@ -56,8 +56,8 @@ UI
 
 drawUI
 -draw UI
-    - *drawlives
-    - *display score
+    - *drawlives - Kyle
+    - *display score - Kyle
 -draw game
     - drawPlayer -kalina
     - drawEnemies - Lauren
@@ -68,25 +68,24 @@ drawUI
 Public Methods
 - collision detection(x1 y1 x2 y2) --> true/false DONE (Danielle)
 - collision reaction (if pizzaPlayer collides w Thing, +/- score, - lives, complete level, etc..) - Danielle/Lauren
-- isOutOfBounds(x, y)
-- getRandomPos --> give a random unoccuppied position; could be on ground or platform
+- isOutOfBounds(x, y) - Lauren DONE
 - endGame
 - startGame -kalina
 - resetGame
-- pauseGame ?
-- gravity
+- pauseGame - DONE
+- gravity - DONE
 
 
 What else do we need?
-- *score display
+- *score display - Kyle DONE
 - opening/ending screen? 
 - instructions or help button to show key moves & game rules?
 - *Level Layout (define list of platforms, collectables, and enemies & their placements)
-    - make sure platforms within reach of each other
+    - make sure platforms within reach of each other - Danielle DONE
     - make sure you are able to jump over/avoid enemies -- adjust height/speed
 - *game over function
 - *game reset function/button
-- game pause function/button
+- game pause function/button - DONE
 - game over reactions/visuals/sounds
 - lose a life reactions/visuals/sounds
 - collectable reactions/visuals/sounds
