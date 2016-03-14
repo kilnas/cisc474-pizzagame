@@ -91,7 +91,12 @@ button {
 .squirrel, .bird{
     background-image: url("../images/squirrel.gif");
     background-size: 20px 20px;
-    background-repeat: none;
+    background-repeat: no-repeat;
+}
+
+.collectable{
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
 }
 
 /*Lives*/

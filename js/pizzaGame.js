@@ -243,7 +243,11 @@ var collectItem = function(game, itemIndex, array){
             $('#pizzaPlayer').css('background-color', 'red');
         }
         if (item.type == "cheese"){
-            //todo
+            var cheese = document.createElement('div');
+            cheese.setAttribute('id','cheese');
+            var pizza = document.getElementById('pizzaPlayer');
+            pizza.appendChild(cheese);
+            
         }
         
         var audioElement = document.createElement('audio');
@@ -469,14 +473,16 @@ var drawCollectable = function(item){
         var $item = document.createElement('div');
      
         $item.classList.add("collectable");
+        $item.style.backgroundImage = "url(../images/" + item.type + ".png)";
+        $item.style.backgroundSize = item.width + "px " + item.height + "px";
     
         if (item.isRequired){
             $item.classList.add("ingredient");
-            $item.style.backgroundColor = "green";
+           // $item.style.backgroundColor = "green";
         }
         else{
             $item.classList.add("topping");
-            $item.style.backgroundColor = "blue";
+           // $item.style.backgroundColor = "blue";
         }
     
         if(item.isCollected){
@@ -829,32 +835,33 @@ $("#restartButton").click(function(){
 
 //Functions to generate Game Objects
 var makeEnemies = function(){ 
+    var speed = 400;
     return ([
-    new Enemy(200,420,"Squirrel",350,50,50,100,250),
-    new Enemy(50, 25,"Squirrel", 350, 50, 50, 25,125),
-    new Enemy(450,175,"Squirrel", 350,50,50,400,570)
+    new Enemy(200,420,"Squirrel",speed,50,50,75,200),
+    new Enemy(50, 25,"Squirrel", speed, 50, 50, 25,125),
+    new Enemy(450,175,"Squirrel", speed,50,50,425,570)
     ]);
 };
 
 var makeIngredients = function(){ 
     return ([
-    new Collectable("sauce", 50, true, 600, 100, 20, 20),
-    new Collectable("cheese", 50, true, 350, 250, 20, 20)
+    new Collectable("sauce", 25, true, 600, 100, 50, 50),
+    new Collectable("cheese", 25, true, 350, 245, 50, 50)
     ]);
 };
 
 
 var makeToppings = function(){ 
     return ([
-    new Collectable("anchovies", 50, false, 150, 25, 20, 20),
-    new Collectable("pepperoni", 50, false, 600, 300, 20, 20),
-    new Collectable("mushroom", 50, false, 800, 50, 20, 20)
+    new Collectable("anchovies", 100, false, 150, 25, 50, 50),
+    new Collectable("pepperoni", 50, false, 600, 325, 50, 50),
+    new Collectable("mushroom", 75, false, 800, 25, 50, 50)
     ]);
 };
 
 
 //75 is the ideal vertical distance btwn platforms
-var BOTTOM = 375;
+var BOTTOM = 400;
 var TOP = 75;
 var HEIGHT = 20;
 var DIST = 75;
@@ -867,7 +874,7 @@ var makePlatforms = function(){
     new Platform(mainGame.width-100, BOTTOM-DIST, 200, HEIGHT), //row 2
     new Platform(275, BOTTOM-DIST, 175, HEIGHT),
     
-    new Platform(425, BOTTOM-(2*DIST), 225, HEIGHT), //row3
+    new Platform(425, BOTTOM-(2.25*DIST), 225, HEIGHT), //row3
     new Platform(75, BOTTOM-(2*DIST), 175, HEIGHT),
     
     new Platform(550, TOP + DIST, 175, HEIGHT), //row 4
