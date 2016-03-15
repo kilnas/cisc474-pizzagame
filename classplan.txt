@@ -80,15 +80,14 @@ What else do we need?
 - *score display - Kyle DONE
 - opening/ending screen? 
 - instructions or help button to show key moves & game rules?
-- *Level Layout (define list of platforms, collectables, and enemies & their placements)
+- *Level Layout (define list of platforms, collectables, and enemies & their placements) - DONE
     - make sure platforms within reach of each other - Danielle DONE
-    - make sure you are able to jump over/avoid enemies -- adjust height/speed
-- *game over function
-- *game reset function/button
+    - make sure you are able to jump over/avoid enemies -- adjust height/speed - Danielle DONE
+- *game over function - DONE
+- *game reset function/button - DONE
 - game pause function/button - DONE
 - game over reactions/visuals/sounds
 - lose a life reactions/visuals/sounds
 - collectable reactions/visuals/sounds
-- *images for collectables/enemies
+- *images for collectables/enemies - DONE
 - *draw collected items on pizza or in menu bar or w/e
-- door animation

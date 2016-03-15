@@ -2,16 +2,20 @@
 <html>
     <head>
       <link rel="stylesheet" type="text/css" href="css/pizzaGame.css">
+      <link rel="stylesheet" type="text/css" href="css/styles.css">
        <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
         <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     </head>
     <body>
         <h1>this is a pizza game</h1>
+        <p>You are a pizza dough. You must collect toppings to become a delicious pizza and get eaten. 
+        <br>Required toppings are cheese and sauce. To become extra tasty you can collect toppings and gain points for your ego. 
+        <br>You will lose a slice of life if you hit a squirrel.</p>
         <div id="gameContainer"> <!--contains the gameUI and gameBoard -->
             <div id="gameUI"><!--gameUI includes control buttons and displays-->
                 <button id="startButton">Start</button>
-                <button id="pauseButton">pause</button>
-                <button id="restartButton">restart</button>
+                <button id="pauseButton">Pause</button>
+                <button id="restartButton">Restart</button>
                 <div id="lives">Lives:</div><!--pizza slices represent lives-->
                 <!--<button id="pauseButton">Pause</button>-->
                 <div id= "score">Score:
@@ -19,7 +23,7 @@
                 </div>
             </div><!-- gameUI end-->
             <div id="gameBoard"><!-- this is the game (where it is played) -->
-                <div id = "winScreen">congratulations</div>
+                <div id = "winScreen">congratulations.</div>
                 <div id = "loseScreen">loser</div>
                 <div id ="pizzaPlayer"></div>
                 <div id ="ground"></div>

@@ -1,4 +1,14 @@
 
+
+h1{
+    font-family: Impact;
+}
+
+p{
+    font-family: helvetica;
+}
+
+
 #gameContainer{
     background-color: papayawhip;
     height: 500px;
@@ -38,7 +48,7 @@ button {
 
 
 #gameBoard{
-    background-color: pink;
+    background-color: gainsboro;
     height: 500px;
     width: 900px;
     margin: 0 auto;
@@ -133,8 +143,8 @@ button {
 #slice {
 	overflow: hidden;
 	position: absolute;
-	top: 0; 
-	right: 0;
+	top: 70px; 
+	left: 50px;
 	width: 50%; 
 	height: 50%;
 	-webkit-transform-origin: 0% 100%;
@@ -166,6 +176,8 @@ button {
     display:inline-block;
     text-align:left;
     margin-left: 200px;
+    
+    z-index: 2;
     width:350px;
     font-family:Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
     font-weight: bolder;
@@ -185,28 +197,42 @@ button {
 }
 
 #winScreen{
-    height: 300px;
+    height: 200px;
     width: 600px;
     position: absolute;
-    left: 50px;
+    left: 140px;
     top: 50px;
-    background-color: lightcyan;
+    background-color: greenyellow;
     opacity: 0;
     z-index: 5;
     text-align: center;
-    padding-top: 0px;
+    padding-top: 180px;
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 20px;
+    background-image: url('../images/yay.png');
+    background-size: 950px;
+    background-position: -30px 0px;
     
 }
 
 #loseScreen{
-    height: 300px;
+    height: 350px;
     width: 600px;
     position: absolute;
-    left: 100px;
-    top: 100px;
-    background-color: mediumOrchid;
+    left: 130px;
+    top: 80px;
+    background-color: gray;
     opacity: 0;
     z-index: 5;
-    text-align: center;
-    padding-top: 50px;
+    text-align: right;
+    padding-top: 20px;
+    margin: 0 auto;
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 50px;
+    background-image: url('../images/singletear.jpg');
+    background-repeat: no-repeat;
+    color: red;
+    background-size: 550px;
+    
+    
 }

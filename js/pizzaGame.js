@@ -61,7 +61,7 @@ var PizzaGame = function(level, pizzaPlayer, door){ // game object
             
            
             console.log("You collected all the ingredients! Now you can get toppings and be eaten.");
-            //alert("You collected all the ingredients! Now you can get toppings and be eaten.");
+            alert("You collected all the ingredients! Now you can get toppings and be eaten.");
         }
     };
 }
@@ -382,7 +382,7 @@ var Enemy = function(xPos, yPos, type, speed, width, height,minx,maxx){
     
     this.updateEnemy = function(){
       
-        self.xPos+=count;
+        self.xPos+=count*speed;
           if(self.xPos<minx){
               count*=-1;
               self.xPos+=speed;
@@ -710,12 +710,6 @@ var movePlayer = function(pizzaPlayer){
                 
             //drawPizzaPlayer(pizzaPlayer);
             
-        }else if((code == 39 || code == 68) && (code == 38 || code == 87)){//move right and up // ATTEMPT
-            pizzaPlayer.moveRight(PIZZASPEED);
-            //$("#pizzaPlayer").prop("transform", "rotate(3deg)");
-            PIZZAROTATE_DEG += ROTATE_VAL;
-                
-            pizzaPlayer.jump();
             
         }else{
             // do nothing if other keys
@@ -744,14 +738,24 @@ var startGame = function(game, player){
             });
         }
         movePlayer(player);
-    updateGame();
+   
+    //avoid speedups if start is pressed multiple times by delaying call to update 
+    //the delay of 75 is long enough for old update threads to see game is not running and die
+    //before we call a new update thread
+    game.isRunning = false;
+    setTimeout(function(){
+        mainGame.isRunning = true;
+        updateGame();
+        console.log("started game!");
+    }, 75);
+    //updateGame();
     //console.log(player.yPos);
     //}  
 };
 
 
 var restartGame = function(game, player){
-    game.isRunning = true;
+    game.isRunning = false;
     game.score = 0;
     drawScore(game);
     game.lives = 3;
@@ -789,11 +793,13 @@ var restartGame = function(game, player){
     //$('#winScreen').css('opacity', 0);
     //$('#loseScreen').css('opacity', 0);
     
-    startGame(mainGame, pizza1);
-    
-
-    
-    
+    //avoid speedups if restart is pressed multiple times
+    //the delay of 75 is long enough for old update threads to see game is not running and die
+    //before we call a new update thread
+    setTimeout(function(){
+        mainGame.isRunning = true;
+        startGame(mainGame, pizza1);
+        }, 75);
 };
 
 
@@ -835,7 +841,7 @@ $("#restartButton").click(function(){
 
 //Functions to generate Game Objects
 var makeEnemies = function(){ 
-    var speed = 400;
+    var speed = 5;
     return ([
     new Enemy(200,420,"Squirrel",speed,50,50,75,200),
     new Enemy(50, 25,"Squirrel", speed, 50, 50, 25,125),
@@ -909,7 +915,7 @@ mainGame.listOfEnemies= makeEnemies();
 //test update - checks for collisions and collectable updates every 70ms
 var updateGame = function(){
     if(mainGame.isRunning){
-    
+    //console.log("update");
     setTimeout(function(){
         drawPizzaPlayer(pizza1); //note: draw before collision checks!
         
@@ -954,7 +960,9 @@ var updateGame = function(){
 
         updateGame();
         }, 70);
+   // }, 1000); //for testing - update every 1 second
     }
+    //else{(console.log("game not running right now"));}
 }
 
 //for testing the collision function
