@@ -31,7 +31,7 @@ button {
 }
 
 #score {
-    /*display:inline-block;*/
+ 
     font-family:Impact, Charcoal, sans-serif;
     color:#DFA060;
     float:right;
@@ -72,9 +72,6 @@ button {
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
-    /*-webkit-transition: transform 0s linear;
-    transition: transform 0s linear;*/
-    /*-webkit-transition: all 0.3s ease-out , top 0.5s ease-in;*/
     transition: all 0.3s ease-out, top .3s cubic-bezier(0,.99,.01,1), transform 0.5s ease-out;
     top: -100px;
     left: 20px;
@@ -89,7 +86,6 @@ button {
     top: 600px;
     left: -10px;
     background-color: sienna;
-    /*display: none;*/
     opacity: 1;
     transition: top 0.2s ease-in;
 }
@@ -172,9 +168,7 @@ button {
 	transform: skewY(40deg);
 
 }
-/*#slice-contents:hover {*/
-/*    background: transparent;*/
-/*}*/
+
 #lives {
     display:inline-block;
     text-align:left;

@@ -3,8 +3,6 @@
 
 
 //------GLOBAL VARIABLES
-
-var PIZZAROTATE_DEG = 0;
 var ROTATE_VAL = 30;
 var PIZZASPEED = 15;
 var GROUNDLINE = 400;
@@ -29,7 +27,7 @@ var PizzaGame = function(level, pizzaPlayer, door){ // game object
     this.height = 400;
     this.isRunning = false;
     this.isPaused = false;
-    //this.ingredientsComplete = false;
+    this.ingredientsComplete = false;
 
     this.update = function(){
     
@@ -82,47 +80,23 @@ var PizzaPlayer = function(xPos, yPos, width, height){ // main character player
     this.rotateDeg = 0;
 
     this.moveLeft = function(value){
-        //console.log(self.xVel);
             self.xVel = -200;
             self.isMoving = true;
-            
             self.rotateDeg -= ROTATE_VAL;
             
-            
-            
-        //UNUSED
-        if(self.isJumping){
-          
-        }else{
-            //self.xPos = self.xPos - value;
-        }
         
     }
     
     this.moveRight = function(value){
-        //console.log(self.xVel);
         self.xVel = 200;
         self.isMoving = true;
-        
        self.rotateDeg += ROTATE_VAL;
-        
-        
-        //UNUSED
-        if(self.isJumping){ // if jumping
-            //self.xVel = 60;
-            //self.isMoving = true;
-        }else{
-            //self.xPos = self.xPos + value;
-        }
-        
         
     }
     
-   // self.xPos.clamp(0, PizzaGame.width-self.width);
-    
     this.jump = function(){
         if (self.isJumping == false) {
-            self.yVel = -50;//-60
+            self.yVel = -50;
             
         self.isJumping = true;
         }
@@ -183,11 +157,9 @@ var checkPlatformEvents = function(game){
         
      //if already on platform, check if moved off the platform
     if(pizza.isOnPlatform){ 
-        //console.log("pizza left edge at " + pizza1.xPos + ", platform right edge at " + (testPlatform.xPos + testPlatform.width)); 
-        //console.log("pizza at (" + pizza1.xPos + ", " + pizza1.yPos + "), platform at (" + testPlatform.xPos + ", " + testPlatform.yPos + ")"); 
          if(landedPlat == null){
              pizza.isOnPlatform = false;
-             //apply gravity?
+             //apply gravity
              pizza.isJumping = true;
            }
         }
@@ -226,11 +198,7 @@ var colliding = function(player, object){
     ((player.xPos + player.width) < object.xPos) || //player left
     (player.xPos > (object.xPos + object.width)) //player right
     );
-   /* if(isGap){
-        console.log("Pizza :" + player.xPos + ", " + player.yPos);
-        console.log("Object :" + object.xPos + ", " + object.yPos);
-        console.log("--------");
-    }*/
+
     return !isGap;
 }
 
@@ -265,19 +233,19 @@ var collectItem = function(game, itemIndex, array){
             var pepperoni = document.createElement('div');
             pepperoni.setAttribute('id','pepperoni');
             toppings.appendChild(pepperoni);
-            //$('pepperoni').addClass('.pepperoni');
+            
         }
         if (item.type == "anchovies"){
             var anchovies = document.createElement('div');
             anchovies.setAttribute('id','anchovies');
             toppings.appendChild(anchovies);
-            //$('anchovies').addClass('.anchovies');
+            
         }
         if (item.type == "mushroom"){
             var mushrooms = document.createElement('div');
             mushrooms.setAttribute('id','mushrooms');
             toppings.appendChild(mushrooms);
-            //$('mushroom').addClass('.mushroom');
+            
         }
         
         var audioElement = document.createElement('audio');
@@ -299,9 +267,8 @@ var collectItem = function(game, itemIndex, array){
 var isHittingThingInArray = function(player, list, current){
   var hit = false;
    for(var i=0; i < list.length && !hit; i++){
-       //if (!i == current){
         hit = hit || colliding(player, list[i]);
-       //}
+       
    }
    console.log("is it hitting anything? " + hit);
    return hit;
@@ -349,13 +316,12 @@ var checkCollisions = function(game){
     
     //if we didn't hit anything this round, reset isHittingEnemy. Now we can hit enemies again.
     if(!hitEnemyThisRound){
-       // console.log("did not hit any enemies");
+       
         game.pizzaPlayer.isHittingEnemy=false;
     }
     
     //check door
     if(colliding(game.pizzaPlayer, game.door) && !game.pizzaPlayer.isHittingDoor){
-        //console.log("HIT DOOR");
         game.pizzaPlayer.isHittingDoor = true;
         winGame(game);
         
@@ -428,7 +394,8 @@ var drawPizzaPlayer = function(pizzaPlayer){
                "transform": "rotate(" + pizzaPlayer.rotateDeg + "deg)"
     });
     
-    console.log(PIZZAROTATE_DEG);
+  
+  
     console.log("OK" + pizzaPlayer.rotateDeg);
 
            
@@ -500,9 +467,6 @@ var drawCollectable = function(item){
         $item.style.width = item.width + "px",
         $item.style.height = item.height + "px",
     
-        /*console.log("X: " + item.xPos);
-        console.log("Y: " + item.yPos);
-        console.log("-----");*/
 
         $("#gameBoard").append($item);
     }
@@ -598,10 +562,9 @@ var drawDoor = function(door){
     $door.style.top = door.yPos + 'px';
     $door.style.width = door.width + 'px';
     $door.style.height = door.height + 'px';
-    //$door.css('left', xPos + "px");
     $('#gameBoard').append($door);
     
-     if(door.isUnlocked){ // door draw open // not working?
+     if(door.isUnlocked){ // door draw open
             $('#mouthDoor').css('background-image',  'url('+'../images/mouthopen.jpg' +')');
     }else{
         $('#mouthDoor').css('background-image',  'url('+'../images/mouthclose.png' +')');
@@ -631,17 +594,16 @@ var drawPlatforms = function(game){
     //redraw
     for(var i=0; i < game.listOfPlatforms.length; i++){
         drawPlatform(game.listOfPlatforms[i]);
-        //console.log("platform: " + game.listOfPlatforms[i].width + ", " + game.listOfPlatforms[i].height);
     }
 }
 
 
 var drawGround = function(height){
-    //console.log("HERE" + $('#ground').css('height'));
+  
     $('#ground').css('opacity', 1);
     $('#ground').css('top',  GROUNDLINE + height + 50 + 'px');
     $('#ground').css('height', height + 'px');
-    //$('#ground').attr('top', GROUNDLINE + height + 'px');
+
     
     
 
@@ -650,18 +612,13 @@ var drawGround = function(height){
 //-------------------------------------- CONTROLLER stuff
 
 var winGame = function(game){
-    if(game.door.isUnlocked){
-        //console.log('wonton');
-       
+    if(game.door.isUnlocked){ //win game
         $('#winScreen').css('opacity', 1);
-        //var $winScreen = document.createElement('div');
         $('#pizzaPlayer').css('height', '0px');
         $('#pizzaPlayer').css('width', '5px');
-        //$('#pizzaPlayer').css('opacity', .1);
-        //game.pizzaPlayer.yPos += 30;
+
         game.pizzaPlayer.yPos = game.door.yPos + 40;
         game.score = game.score + (game.lives*10);
-        //game.pizzaPlayer.xVel = 0;
         game.pizzaPlayer.xPos =  game.door.xPos + (game.door.width/2)
         console.log("gamdoor " + game.door.xPos);
         console.log("pizza" + game.pizzaPlayer.xPos);
@@ -693,34 +650,15 @@ var loseGame = function(game){
 
 // player key press
 var movePlayer = function(pizzaPlayer){
-    //console.log(pizzaPlayer);
+
     $("body").keydown(function(e){
         var code = e.which; //e.keyCode || 
         
         if(code == 37 || code == 65){//move left
            pizzaPlayer.moveLeft(PIZZASPEED);
-           //$("#pizzaPlayer").prop("-webkit-transform", "rotate(-3deg)");
-           //$("#pizzaPlayer").animate({transform: 'rotate(-3deg)'});
-           
-           
-           //PIZZAROTATE_DEG -= ROTATE_VAL;
-    
-           
-           //drawPizzaPlayer(pizzaPlayer);
-           /*console.log("pizza X: " + pizzaPlayer.xPos);
-           console.log("pizza Y: " + pizzaPlayer.yPos);
-           console.log("------");*/
 
-           
         }else if(code == 39 || code == 68){//move right
             pizzaPlayer.moveRight(PIZZASPEED);
-            //$("#pizzaPlayer").prop("transform", "rotate(3deg)");
-            
-            
-            //PIZZAROTATE_DEG += ROTATE_VAL;
-                
-            //drawPizzaPlayer(pizzaPlayer);
-            
             
         }else{
             // do nothing if other keys
@@ -729,8 +667,6 @@ var movePlayer = function(pizzaPlayer){
         
         if(code == 38 || code == 87){//up
             pizzaPlayer.jump();
-         
-            //drawPizzaPlayer(pizzaPlayer);
         }
     });
      
@@ -764,8 +700,7 @@ var startGame = function(game, player){
         console.log("started game!");
     }, 75);
     //updateGame();
-    //console.log(player.yPos);
-    //}  
+ 
 };
 
 
@@ -794,9 +729,7 @@ var startGame1 = function(game, player){
         
         console.log("started game!");
     }, 75);
-    //updateGame();
-    //console.log(player.yPos);
-    //}  
+
 };
 
 var restartGame = function(game, player){
@@ -819,7 +752,6 @@ var restartGame = function(game, player){
     pizza1 = makePlayer();
     game.pizzaPlayer = pizza1;
     
-    PIZZAROTATE_DEG = 0;
     player.rotateDeg = 0;
     
     $('#winScreen').attr('style', '');
@@ -827,8 +759,6 @@ var restartGame = function(game, player){
     game.door.isUnlocked = false;
     drawDoor(game.door);
     
-    
-    //console.log(player.yPos);
     
     //reset collectables
     game.listOfIngredients.forEach(function (item){
@@ -842,9 +772,7 @@ var restartGame = function(game, player){
     $('#pepperoni').remove();
     $('#anchovies').remove();
     $('#mushrooms').remove();
-    //$('#ground').attr('style', '');
-    //$('#winScreen').css('opacity', 0);
-    //$('#loseScreen').css('opacity', 0);
+
     
     //avoid speedups if restart is pressed multiple times
     //the delay of 75 is long enough for old update threads to see game is not running and die
@@ -857,8 +785,6 @@ var restartGame = function(game, player){
 
 
 //button press
-
-
 $("#startButton").click(function(){
     mainGame.isRunning = true;
     livesFlag = true;
@@ -870,7 +796,6 @@ $("#pauseButton").click(function(){
     if(!mainGame.isPaused){
         mainGame.isRunning = false;
         mainGame.isPaused = true;
-        //console.log(testGame.isRunning);
     }else{
         mainGame.isRunning = true;
         updateGame();
@@ -983,24 +908,20 @@ var updateGame = function(){
          if (pizza1.isJumping) {
             pizza1.yVel += GRAVITY; 
             pizza1.yPos += pizza1.yVel;
-            //console.log("YVEL: " + pizza1.yVel);
-            //console.log("YLOC: " + pizza1.yPos);
             FRICTION = .25;
          if (pizza1.yPos > GROUNDLINE) {
              pizza1.yPos = GROUNDLINE;
              pizza1.yVel = 0;
              pizza1.isJumping = false;
-             //console.log("YVEL at groundline: " + pizza1.yVel);
             }
         }else{
             FRICTION = .1;
         }
         
-        if(pizza1.isMoving){//&& pizza1.isJumping
-            //console.log(pizza1.xVel);
+        if(pizza1.isMoving){
             pizza1.xVel = pizza1.xVel * FRICTION;
             pizza1.xPos += pizza1.xVel;
-        }else if(!pizza1.isMoving){ //&& !pizza1.isJumping
+        }else if(!pizza1.isMoving){
             pizza1.xVel = 0;
         }
         if(pizza1.xVel <= 5 && pizza1.xVel >= -5){
@@ -1013,9 +934,7 @@ var updateGame = function(){
 
         updateGame();
         }, 70);
-   // }, 1000); //for testing - update every 1 second
     }
-    //else{(console.log("game not running right now"));}
 }
 
 //for testing the collision function
