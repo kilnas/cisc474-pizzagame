@@ -55,13 +55,8 @@ var PizzaGame = function(level, pizzaPlayer, door){ // game object
             drawDoor(self.door);
             },350);
             
-            
-            
-            
-            
-           
             console.log("You collected all the ingredients! Now you can get toppings and be eaten.");
-            alert("You collected all the ingredients! Now you can get toppings and be eaten.");
+            //alert("You collected all the ingredients! Now you can get toppings and be eaten.");
         }
     };
 }
@@ -243,10 +238,7 @@ var collectItem = function(game, itemIndex, array){
             $('#pizzaPlayer').css('background-color', 'red');
         }
         if (item.type == "cheese"){
-            var cheese = document.createElement('div');
-            cheese.setAttribute('id','cheese');
-            var pizza = document.getElementById('pizzaPlayer');
-            pizza.appendChild(cheese);
+            $('#pizzaPlayer').css('background-color', '#FFFF77');
             
         }
         
@@ -263,14 +255,24 @@ var collectItem = function(game, itemIndex, array){
     }
     //if topping, and allowed to collect toppings, increase score
     else if(game.ingredientsComplete){
+        var toppings = document.getElementById('toppingsBox');
         if (item.type == "pepperoni"){
-            //todo
+            var pepperoni = document.createElement('div');
+            pepperoni.setAttribute('id','pepperoni');
+            toppings.appendChild(pepperoni);
+            //$('pepperoni').addClass('.pepperoni');
         }
         if (item.type == "anchovies"){
-            //todo
+            var anchovies = document.createElement('div');
+            anchovies.setAttribute('id','anchovies');
+            toppings.appendChild(anchovies);
+            //$('anchovies').addClass('.anchovies');
         }
-        if (item.type == "mushrooms"){
-            //todo
+        if (item.type == "mushroom"){
+            var mushrooms = document.createElement('div');
+            mushrooms.setAttribute('id','mushrooms');
+            toppings.appendChild(mushrooms);
+            //$('mushroom').addClass('.mushroom');
         }
         
         var audioElement = document.createElement('audio');
@@ -420,13 +422,11 @@ var drawPizzaPlayer = function(pizzaPlayer){
                "-webkit-transform": "rotate(" + PIZZAROTATE_DEG + "deg)",
                "transform": "rotate(" + PIZZAROTATE_DEG + "deg)"
     });
+    
+    console.log(PIZZAROTATE_DEG);
 
            
            
-    var drawTopping = function(){
-        //apply abstract css class
-    };
-    //do stuff with height/width scaling
 };
 
 var drawScore = function(game){
@@ -654,6 +654,7 @@ var winGame = function(game){
         //$('#pizzaPlayer').css('opacity', .1);
         //game.pizzaPlayer.yPos += 30;
         game.pizzaPlayer.yPos = game.door.yPos + 40;
+        game.score = game.score + (game.lives*10);
         //game.pizzaPlayer.xVel = 0;
         game.pizzaPlayer.xPos =  game.door.xPos + (game.door.width/2)
         console.log("gamdoor " + game.door.xPos);
@@ -728,7 +729,7 @@ var movePlayer = function(pizzaPlayer){
 
 
 var startGame = function(game, player){
-    //if(game.isRunning){
+    if(game.isRunning){
         drawDoor(game.door);
         drawGround(20);
         if(player.xPos >= GROUNDLINE){
@@ -738,14 +739,18 @@ var startGame = function(game, player){
             });
         }
         movePlayer(player);
+        
+    }
    
     //avoid speedups if start is pressed multiple times by delaying call to update 
     //the delay of 75 is long enough for old update threads to see game is not running and die
     //before we call a new update thread
+    
     game.isRunning = false;
     setTimeout(function(){
         mainGame.isRunning = true;
         updateGame();
+        
         console.log("started game!");
     }, 75);
     //updateGame();
@@ -759,6 +764,7 @@ var restartGame = function(game, player){
     game.score = 0;
     drawScore(game);
     game.lives = 3;
+    game.ingredientsComplete = false;
     livesFlag = true;
     drawLives(game.lives);
     $('#pizzaPlayer').attr('style', '');
@@ -774,12 +780,13 @@ var restartGame = function(game, player){
     game.pizzaPlayer = pizza1;
     
     PIZZAROTATE_DEG = 0;
+    
     $('#winScreen').attr('style', '');
     $('#loseScreen').attr('style', '');
     game.door.isUnlocked = false;
     drawDoor(game.door);
     
-    drawPizzaPlayer(player);
+    
     //console.log(player.yPos);
     
     //reset collectables
@@ -789,6 +796,11 @@ var restartGame = function(game, player){
      game.listOfToppings.forEach(function (item){
         item.isCollected = false;
     });
+    
+    
+    $('#pepperoni').remove();
+    $('#anchovies').remove();
+    $('#mushrooms').remove();
     //$('#ground').attr('style', '');
     //$('#winScreen').css('opacity', 0);
     //$('#loseScreen').css('opacity', 0);
@@ -851,8 +863,8 @@ var makeEnemies = function(){
 
 var makeIngredients = function(){ 
     return ([
-    new Collectable("sauce", 25, true, 600, 100, 50, 50),
-    new Collectable("cheese", 25, true, 350, 245, 50, 50)
+    new Collectable("cheese", 25, true, 600, 100, 50, 50),
+    new Collectable("sauce", 25, true, 350, 245, 50, 50)
     ]);
 };
 

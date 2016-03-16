@@ -41,7 +41,7 @@ button {
     float:right;
     width:40px;
     height:25px;
-    margin-top: 0px;
+    margin-top: 3px;
     margin-bottom: 0px;
     text-align: center;
 }
@@ -62,13 +62,13 @@ button {
     height:60px;
     background-color:#DFA060;
     border-color:BurlyWood;
-    border-style:solid;
-    border-width:6px;
-    background-image: url("../images/emoji.png");
     background-repeat: no-repeat;
     background-size: 50px 50px;
     background-position: center;
+    border-style:solid;
+    border-width:6px;
     position: absolute;
+    background-image: url("../images/emoji.png");
     transform: rotate(0deg);
     -webkit-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
@@ -112,8 +112,8 @@ button {
 /*Lives*/
 #circle1 {
 	position: absolute;
-	left:440px;
-	top:65px;
+	left:420px;
+	top:105px;
 	padding:0px;
 	width: 50px; 
 	height: 50px;
@@ -122,8 +122,8 @@ button {
 }
 #circle2 {
     position: absolute;	
-    left:470px; 
-    top:65px;
+    left:450px; 
+    top:105px;
     padding:0px;
     width: 50px; 
 	height: 50px;
@@ -132,8 +132,8 @@ button {
 }
 #circle3 {	
     position: absolute;	
-    left:500px;
-    top:65px;
+    left:480px;
+    top:105px;
     padding:0px;	
     width: 50px; 
 	height: 50px;
@@ -143,21 +143,24 @@ button {
 #slice {
 	overflow: hidden;
 	position: absolute;
-	top: 70px; 
+	top: 35px; 
 	left: 50px;
 	width: 50%; 
 	height: 50%;
 	-webkit-transform-origin: 0% 100%;
 	transform-origin: 0% 100%;
+	z-index:2 ;
 }
 #slice:first-child {
 	-webkit-transform: rotate(-25deg) skewY(-40deg);
 	transform: rotate(-25deg) skewY(-40deg);
 
 }
+#slice-contents{
+    background: url("../images/pizza-cut.png");
+}
 #slice-contents {
 	position: absolute;
-	background: url("../images/pizza-cut.png");
 	left: -100%;
 	width: 200%;
 	height: 200%;
@@ -169,9 +172,9 @@ button {
 	transform: skewY(40deg);
 
 }
-#slice-contents:hover {
-    background: transparent;
-}
+/*#slice-contents:hover {*/
+/*    background: transparent;*/
+/*}*/
 #lives {
     display:inline-block;
     text-align:left;
@@ -235,4 +238,50 @@ button {
     background-size: 550px;
     
     
+}
+
+/* toppings */
+#toppingsBox {
+    position:absolute;
+    left:325px;
+    margin-top:10px;
+    height:90px;
+    width:200px;
+    border-style:solid;
+    border-color: BurlyWood;
+    font-family:Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    font-weight: bolder;
+    color:#CF9050;
+    text-align: center;
+}
+
+#pepperoni {
+    position:absolute;
+    left:7px;
+    top:22px;
+    background-image: url('../images/pepperoni.png');
+    background-size: 50px;
+    background-repeat:no-repeat;
+    height:60px;
+    width:60px;
+}
+#anchovies {
+    position:absolute;
+    left:68px;
+    top:22px;
+    background-image: url('../images/anchovies.png');
+    background-size: 50px;
+    background-repeat:no-repeat;
+    height:60px;
+    width:60px;
+}
+#mushrooms {
+    position:absolute;
+    left:132px;
+    top:22px;
+    background-image: url('../images/mushroom.png');
+    background-size: 50px;
+    background-repeat:no-repeat;
+    height:60px;
+    width:60px;
 }

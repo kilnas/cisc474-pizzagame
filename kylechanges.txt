@@ -1,0 +1,128 @@
+bottom of pizzaGame.css:
+
+GET RID OF CHEESE CLASS IF STILL THERE
+
+/* toppings */
+#toppingsBox {
+    position:absolute;
+    left:295px;
+    margin-top:10px;
+    height:90px;
+    width:200px;
+    border-style:solid;
+    border-color: BurlyWood;
+    font-family:Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif;
+    font-weight: bolder;
+    color:#CF9050;
+    text-align: center;
+}
+
+.pepperoni {
+    position:absolute;
+    left:7px;
+    top:22px;
+    background-image: url('../images/pepperoni.png');
+    background-size: 50px;
+    background-repeat:no-repeat;
+    height:60px;
+    width:60px;
+}
+.anchovies {
+    position:absolute;
+    left:68px;
+    top:22px;
+    background-image: url('../images/anchovies.png');
+    background-size: 50px;
+    background-repeat:no-repeat;
+    height:60px;
+    width:60px;
+}
+.mushroom {
+    position:absolute;
+    left:132px;
+    top:22px;
+    background-image: url('../images/mushroom.png');
+    background-size: 50px;
+    background-repeat:no-repeat;
+    height:60px;
+    width:60px;
+}
+
+
+
+pizzaGame.js
+
+AGAIN, ALL INSTANCES OF #cheese WERE REMOVED
+
+//check this item off the game's list and update score/lives/door/etc.
+var collectItem = function(game, itemIndex, array){
+    var item = array[itemIndex];
+    //if ingredient, check if we can unlock the door now
+    if(item.isRequired){
+        if (item.type == "sauce"){
+            $('#pizzaPlayer').css('background-color', 'red');
+        }
+        if (item.type == "cheese"){
+            $('#pizzaPlayer').css('background-color', '#FFFF77');
+            
+        }
+        
+        var audioElement = document.createElement('audio');
+        audioElement.setAttribute('src', '../sounds/collectsound.mp3');
+        audioElement.setAttribute('autoplay', 'autoplay');
+        
+        item.isCollected = true;
+        
+        game.score += item.points;
+        game.checkIngredientCompletion(); 
+        console.log("collected " + item.type + " at " + item.xPos + ", " + item.yPos);
+        console.log("score: " + game.score);
+    }
+    //if topping, and allowed to collect toppings, increase score
+    else if(game.ingredientsComplete){
+        var toppings = document.getElementById('toppingsBox');
+        if (item.type == "pepperoni"){
+            var pepperoni = document.createElement('div');
+            //pepperoni.setAttribute('id','pepperoni');
+            toppings.appendChild('pepperoni');
+            $('pepperoni').addClass('.pepperoni');
+        }
+        if (item.type == "anchovies"){
+            var anchovies = document.createElement('div');
+            //anchovies.setAttribute('id','anchovies');
+            toppings.appendChild('anchovies');
+            $('anchovies').addClass('.anchovies');
+        }
+        if (item.type == "mushroom"){
+            var mushrooms = document.createElement('div');
+            //mushrooms.setAttribute('id','mushrooms');
+            toppings.appendChild('mushrooms');
+            $('mushroom').addClass('.mushroom');
+        }
+        
+        var audioElement = document.createElement('audio');
+        audioElement.setAttribute('src', '../sounds/collectsound.mp3');
+        audioElement.setAttribute('autoplay', 'autoplay');
+        
+        item.isCollected = true;
+        game.score += item.points;
+        console.log("collected " + item.type + " at " + item.xPos + ", " + item.yPos);
+        console.log("score: " + game.score);
+    } 
+    //else, you tried to collect topping when not allowed yet
+    else{
+        console.log("You can't collect toppings until you have the basic ingredients!");
+    }
+};
+
+
+
+in index.html
+
+            <div id="gameBoard"><!-- this is the game (where it is played) -->
+                <div id = "winScreen">congratulations.</div>
+                <div id = "loseScreen">loser</div>
+                <div id ="pizzaPlayer"></div>
+                <div id="toppingsBox">Toppings:</div>
+                <div id ="ground"></div>
+            </div><!-- gameBoard end -->
