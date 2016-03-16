@@ -79,11 +79,14 @@ var PizzaPlayer = function(xPos, yPos, width, height){ // main character player
     this.isHittingEnemy=false;
     this.isHittingTopping = false;
     this.isHittingIngredient = false;
+    this.rotateDeg = 0;
 
     this.moveLeft = function(value){
         //console.log(self.xVel);
             self.xVel = -200;
             self.isMoving = true;
+            
+            self.rotateDeg -= ROTATE_VAL;
             
             
             
@@ -100,6 +103,8 @@ var PizzaPlayer = function(xPos, yPos, width, height){ // main character player
         //console.log(self.xVel);
         self.xVel = 200;
         self.isMoving = true;
+        
+       self.rotateDeg += ROTATE_VAL;
         
         
         //UNUSED
@@ -419,11 +424,12 @@ var drawPizzaPlayer = function(pizzaPlayer){
     $("#pizzaPlayer").css("top", yPos);
     
     $("#pizzaPlayer").css({
-               "-webkit-transform": "rotate(" + PIZZAROTATE_DEG + "deg)",
-               "transform": "rotate(" + PIZZAROTATE_DEG + "deg)"
+               "-webkit-transform": "rotate(" + pizzaPlayer.rotateDeg + "deg)",
+               "transform": "rotate(" + pizzaPlayer.rotateDeg + "deg)"
     });
     
     console.log(PIZZAROTATE_DEG);
+    console.log("OK" + pizzaPlayer.rotateDeg);
 
            
            
@@ -695,7 +701,9 @@ var movePlayer = function(pizzaPlayer){
            pizzaPlayer.moveLeft(PIZZASPEED);
            //$("#pizzaPlayer").prop("-webkit-transform", "rotate(-3deg)");
            //$("#pizzaPlayer").animate({transform: 'rotate(-3deg)'});
-           PIZZAROTATE_DEG -= ROTATE_VAL;
+           
+           
+           //PIZZAROTATE_DEG -= ROTATE_VAL;
     
            
            //drawPizzaPlayer(pizzaPlayer);
@@ -707,7 +715,9 @@ var movePlayer = function(pizzaPlayer){
         }else if(code == 39 || code == 68){//move right
             pizzaPlayer.moveRight(PIZZASPEED);
             //$("#pizzaPlayer").prop("transform", "rotate(3deg)");
-            PIZZAROTATE_DEG += ROTATE_VAL;
+            
+            
+            //PIZZAROTATE_DEG += ROTATE_VAL;
                 
             //drawPizzaPlayer(pizzaPlayer);
             
@@ -729,7 +739,7 @@ var movePlayer = function(pizzaPlayer){
 
 
 var startGame = function(game, player){
-    if(game.isRunning){
+    if(mainGame.isRunning){
         drawDoor(game.door);
         drawGround(20);
         if(player.xPos >= GROUNDLINE){
@@ -759,6 +769,36 @@ var startGame = function(game, player){
 };
 
 
+
+var startGame1 = function(game, player){
+    if(mainGame.isRunning){
+        drawDoor(game.door);
+        drawGround(20);
+        if(player.xPos >= GROUNDLINE){
+            $("#pizzaPlayer").css({
+                  "-webkit-transition": "all 0.3s ease-out",
+                    "transition": "all 0.3s ease-out"
+            });
+        }
+        
+    }
+   
+    //avoid speedups if start is pressed multiple times by delaying call to update 
+    //the delay of 75 is long enough for old update threads to see game is not running and die
+    //before we call a new update thread
+    
+    game.isRunning = false;
+    setTimeout(function(){
+        mainGame.isRunning = true;
+        updateGame();
+        
+        console.log("started game!");
+    }, 75);
+    //updateGame();
+    //console.log(player.yPos);
+    //}  
+};
+
 var restartGame = function(game, player){
     game.isRunning = false;
     game.score = 0;
@@ -780,6 +820,7 @@ var restartGame = function(game, player){
     game.pizzaPlayer = pizza1;
     
     PIZZAROTATE_DEG = 0;
+    player.rotateDeg = 0;
     
     $('#winScreen').attr('style', '');
     $('#loseScreen').attr('style', '');
